@@ -38,7 +38,8 @@ PROJECT_APPS = [
     'apis.users',
     'apis.transactions',
     'apis.deliveries',
-    'apis.payments'
+    'apis.payments',
+    'apis.stations'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
@@ -131,3 +132,5 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
