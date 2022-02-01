@@ -22,3 +22,6 @@ class Inventory(TimeStamp):
     price = models.FloatField()
     station = models.ForeignKey(
         GasStation, on_delete=models.CASCADE, related_name='inventory')
+
+    class Meta:
+        verbose_name_plural = 'inventories'

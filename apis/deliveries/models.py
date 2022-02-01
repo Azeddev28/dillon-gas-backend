@@ -16,3 +16,5 @@ class Delivery(TimeStamp):
     delivered_at = models.DateTimeField()
     status = models.CharField(max_length=100)
 
+    class Meta:
+        verbose_name_plural = 'deliveries'
