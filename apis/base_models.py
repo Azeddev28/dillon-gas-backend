@@ -7,3 +7,10 @@ class TimeStamp(models.Model):
 
     class Meta:
         abstract = True
+
+
+class BaseModel(TimeStamp):
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        abstract = True

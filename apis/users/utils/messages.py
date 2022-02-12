@@ -1,0 +1,5 @@
+LOGOUT_MESSAGE = 'Successfully logged out.'
+INVALID_REQUEST_MESSAGE = 'Invalid Request!'
+USER_REGISTRATION_SUCCESS_MESSAGE = 'User Registered Successfully'
+EMAIL_SENT_MESSAGE = 'Mail Sent'
+EMAIL_VERIFICATION_MESSAGE = 'Email verified successfully!'
