@@ -3,9 +3,12 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
+from apis.users.utils.messages import (INVALID_LOGIN_MESSAGE,
+                                       NO_LOGIN_PARAMS_ENTERETD_MESSAGE)
+
 
 class DGAuthTokenSerializer(serializers.Serializer):
-    email = serializers.CharField(
+    email = serializers.EmailField(
         label=_("Email"),
         write_only=True
     )
@@ -23,10 +26,7 @@ class DGAuthTokenSerializer(serializers.Serializer):
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
-
         if email and password:
-            from django.contrib.auth import get_user_model
-            User = get_user_model()
             user = authenticate(request=self.context.get('request'),
                                 email=email, password=password)
 
@@ -34,11 +34,11 @@ class DGAuthTokenSerializer(serializers.Serializer):
             # users. (Assuming the default ModelBackend authentication
             # backend.)
             if not user:
-                msg = _('Unable to log in with provided credentials.')
-                raise serializers.ValidationError(msg, code='authorization')
+                raise serializers.ValidationError(
+                    INVALID_LOGIN_MESSAGE, code='authorization')
         else:
-            msg = _('Must include "email" and "password".')
-            raise serializers.ValidationError(msg, code='authorization')
+            raise serializers.ValidationError(
+                NO_LOGIN_PARAMS_ENTERETD_MESSAGE, code='authorization')
 
         attrs['user'] = user
         return attrs

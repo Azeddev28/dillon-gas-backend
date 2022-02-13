@@ -10,5 +10,5 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('register/', register_view, name='register'),
     path('verify-account/', email_verification_view, name='account-verification'),
-    path('resend-email', resend_email_view, name='resend-email ')
+    path('resend-email/', resend_email_view, name='resend-email')
 ]

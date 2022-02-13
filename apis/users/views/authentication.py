@@ -29,11 +29,12 @@ class DGTokenObtainView(ObtainAuthToken):
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [DGTokenAuthentication]
+    success_message = LOGOUT_MESSAGE
 
     def post(self, request):
         if Token.objects.filter(user=request.user):
             request.user.auth_token.delete()
             logout(request)
-            return Response({'message': LOGOUT_MESSAGE})
+            return Response({'message': self.success_message})
 
         return Response({'message': INVALID_REQUEST_MESSAGE})

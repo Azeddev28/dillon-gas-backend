@@ -4,14 +4,15 @@ from rest_framework.response import Response
 
 from apis.base_decorators import catch_request_exception
 from apis.base_views import BaseAPIView
-from apis.users.mixins.verification import EmailVerificationMixin
+from apis.users.mixins.verification import SaveSessionMixin
 from apis.users.utils.messages import USER_REGISTRATION_SUCCESS_MESSAGE
 from apis.users.serializers.registration import RegisterSerializer
 
 
 @method_decorator(catch_request_exception, name='post')
-class RegisterUserAPIView(BaseAPIView, EmailVerificationMixin):
+class RegisterUserAPIView(BaseAPIView, SaveSessionMixin):
     serializer_class = RegisterSerializer
+    success_message = USER_REGISTRATION_SUCCESS_MESSAGE
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -20,8 +21,9 @@ class RegisterUserAPIView(BaseAPIView, EmailVerificationMixin):
 
         serializer.save()
         user_data = serializer.data
-        self.initiate_user_verification(user_data.get('email'))
+        verification_code = user_data.pop('verification_code')
+        self.save_session_params(user_data.get('email'), verification_code)
         return Response({
-            "message": USER_REGISTRATION_SUCCESS_MESSAGE,
+            "message": self.success_message,
             "data": user_data
         })
