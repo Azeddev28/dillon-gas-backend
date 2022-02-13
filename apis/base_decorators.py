@@ -10,6 +10,8 @@ def catch_request_exception(func):
         try:
             return func(request, *args, **kwargs)
         except Exception as e:
+            print("HAHA"*100)
+            print(e)
             return Response({
                 'message': 'Something went Wrong!'
             }, status=HTTP_500_INTERNAL_SERVER_ERROR)
