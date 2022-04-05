@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 
 from rest_framework.response import Response
+from rest_framework.exceptions import ParseError
 
 from apis.base_decorators import catch_request_exception
 from apis.base_views import BaseAPIView
@@ -42,6 +43,11 @@ class EmailVerificationAPIView(BaseAPIView):
     serializer_class = EmailVerificationSerializer
     success_message = EMAIL_VERIFICATION_MESSAGE
 
+    def validate_session(self):
+        if (not self.request.session.get('email')
+                or not self.request.session.get('verification_code')):
+            raise ParseError(detail='Invalid Request!')
+
     def clear_session_data(self):
         del self.request.session['email']
         del self.request.session['verification_code']
@@ -51,6 +57,7 @@ class EmailVerificationAPIView(BaseAPIView):
         user.save()
 
     def post(self, request, *args, **kwargs):
+        self.validate_session()
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(self.get_error_message(serializer))

@@ -44,8 +44,6 @@ class EmailVerificationSerializer(serializers.Serializer):
         request = self.context['request']
         user_email = request.session.get('email')
         user_verification_code = request.session.get('verification_code')
-        if not user_email or not user_verification_code:
-            raise serializers.ValidationError(INVALID_VERIFICATION_REQUEST_MESSAGE, code='verification')
 
         if user_email != attrs.get('email') or user_verification_code != attrs.get('verification_code'):
             raise serializers.ValidationError(INVALID_CODE_MESSAGE, code='verification')

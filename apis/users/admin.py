@@ -11,7 +11,7 @@ class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
 
     list_display = ('email', 'is_staff',  'is_superuser',
-                    'date_joined', 'last_login')
+                    'date_joined', 'last_login', 'is_active')
     list_filter = ('is_superuser',)
     readonly_fields = ['date_joined', 'last_login']
     fieldsets = (
@@ -19,7 +19,7 @@ class UserAdmin(BaseUserAdmin):
             'email', 'password', 'date_joined', 'last_login', 'is_staff', 'is_superuser')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'role', 'phone_number')}),
         ('Groups', {'fields': ('groups',)}),
-        ('Permissions', {'fields': ('user_permissions',)}),
+        ('Permissions', {'fields': ('user_permissions', 'is_active')}),
     )
     add_fieldsets = (
         (('Credentials'), {'classes': ('wide',), 'fields': (
