@@ -24,12 +24,14 @@ environ.Env.read_env(ENV_PATH)
 
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-z%@ciss)e*^n6sg2s=p_kb8ol+8m8lmmro(n1no%drov+26@-3'
+
+# TODO: use check_request_enabled signal when integrating third party API's
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -52,12 +54,14 @@ PROJECT_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
