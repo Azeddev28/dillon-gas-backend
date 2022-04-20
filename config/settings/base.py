@@ -28,7 +28,7 @@ environ.Env.read_env(ENV_PATH)
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z%@ciss)e*^n6sg2s=p_kb8ol+8m8lmmro(n1no%drov+26@-3'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # TODO: use check_request_enabled signal when integrating third party API's
 CORS_ORIGIN_ALLOW_ALL = True
@@ -49,12 +49,14 @@ PROJECT_APPS = [
     'apis.transactions',
     'apis.deliveries',
     'apis.payments',
-    'apis.stations'
+    'apis.stations',
+    'apis.inventory',
+    'apis.promotions',
+    'apis.orders'
 ]
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'rest_framework.authtoken',
     'corsheaders',
 ]
 
@@ -120,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # REST FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'apis.users.authentication.token_auth.DGTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
 
