@@ -3,8 +3,7 @@ from config.settings.base import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['167.71.105.169', ]
-
+ALLOWED_HOSTS = ['161.35.189.93', ]
 
 # Database Credentials
 
