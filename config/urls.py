@@ -20,11 +20,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from apis.users import urls as user_urls
+from apis.inventory import urls as inventory_urls
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include(user_urls))
+    path('users/', include(user_urls)),
+    path('inventory/', include(inventory_urls))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
