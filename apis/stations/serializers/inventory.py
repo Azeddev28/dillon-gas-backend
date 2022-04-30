@@ -6,6 +6,7 @@ from apis.stations.models import StationInventory
 class InventoryListSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
 
     def get_name(self, instance):
         return instance.item.name
@@ -13,9 +14,12 @@ class InventoryListSerializer(serializers.ModelSerializer):
     def get_category(self, instance):
         return instance.item.category.name
 
+    def get_description(self, instance):
+        return instance.item.description
+
     class Meta:
         model = StationInventory
-        fields = ['name', 'uuid', 'price', 'category']
+        fields = ['name', 'uuid', 'price', 'category', 'description']
 
 
 class InventoryDetailSerializer(serializers.ModelSerializer):
