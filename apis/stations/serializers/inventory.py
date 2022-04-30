@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apis.stations.models import StationInventory
+from apis.stations.models import StationInventoryItem
 
 
 class InventoryListSerializer(serializers.ModelSerializer):
@@ -18,7 +18,7 @@ class InventoryListSerializer(serializers.ModelSerializer):
         return instance.item.description
 
     class Meta:
-        model = StationInventory
+        model = StationInventoryItem
         fields = ['name', 'uuid', 'price', 'category', 'description']
 
 
@@ -37,5 +37,5 @@ class InventoryDetailSerializer(serializers.ModelSerializer):
         return instance.item.category.name
 
     class Meta:
-        model = StationInventory
+        model = StationInventoryItem
         fields = ['name', 'uuid', 'price', 'category', 'description']

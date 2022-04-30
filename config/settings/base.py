@@ -52,7 +52,8 @@ PROJECT_APPS = [
     'apis.stations',
     'apis.inventory',
     'apis.promotions',
-    'apis.orders'
+    'apis.orders',
+    'apis.ratings'
 ]
 
 THIRD_PARTY_APPS = [

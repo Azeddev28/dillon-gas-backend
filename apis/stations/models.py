@@ -21,7 +21,7 @@ class Station(BaseModel):
         return self.station_id
 
 
-class StationInventory(BaseModel):
+class StationInventoryItem(BaseModel):
     item = models.ForeignKey('inventory.Item', on_delete=models.CASCADE, related_name='inventory')
     quantity = models.IntegerField()
     price = models.FloatField()
@@ -33,5 +33,9 @@ class StationInventory(BaseModel):
         db_table = 'inventory'
         verbose_name_plural = 'inventories'
 
-    def __str__(self):
+    @property
+    def name(self):
         return self.item.name
+
+    def __str__(self):
+        return self.name

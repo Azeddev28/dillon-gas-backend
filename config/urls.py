@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from apis.users import urls as user_urls
 from apis.inventory import urls as inventory_urls
 from apis.stations import urls as station_urls
+from apis.ratings import urls as rating_urls
 
 
 urlpatterns = [
@@ -29,6 +30,7 @@ urlpatterns = [
     path('users/', include(user_urls)),
     path('inventory/', include(inventory_urls)),
     path('stations/', include(station_urls)),
+    path('ratings/', include(rating_urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

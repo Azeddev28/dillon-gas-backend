@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from apis.stations.models import Station, StationInventory
+from apis.stations.models import Station, StationInventoryItem
 
 
 admin.site.register(Station)
-admin.site.register(StationInventory)
+admin.site.register(StationInventoryItem)
