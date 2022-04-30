@@ -1,5 +1,8 @@
+from django.db.models import Avg
+
 from rest_framework import serializers
 
+from apis.ratings.models import StarRating
 from apis.stations.models import StationInventoryItem
 
 
@@ -7,6 +10,10 @@ class InventoryListSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    average_star_rating = serializers.SerializerMethodField()
+
+    def get_average_star_rating(self, instance):
+        return StarRating.objects.filter(item__id=instance.item.id).aggregate(Avg('star_count')).get('star_count__avg')
 
     def get_name(self, instance):
         return instance.item.name
@@ -19,7 +26,7 @@ class InventoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StationInventoryItem
-        fields = ['name', 'uuid', 'price', 'category', 'description']
+        fields = ['name', 'uuid', 'price', 'category', 'description', 'average_star_rating']
 
 
 class InventoryDetailSerializer(serializers.ModelSerializer):
