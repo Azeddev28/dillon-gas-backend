@@ -21,12 +21,14 @@ from django.conf.urls.static import static
 
 from apis.users import urls as user_urls
 from apis.inventory import urls as inventory_urls
+from apis.stations import urls as station_urls
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include(user_urls)),
-    path('inventory/', include(inventory_urls))
+    path('inventory/', include(inventory_urls)),
+    path('stations/', include(station_urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

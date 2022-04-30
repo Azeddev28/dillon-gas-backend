@@ -6,4 +6,4 @@ from apis.inventory.models import Item
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ['name', 'uuid', ]
+        fields = ['name', 'uuid']

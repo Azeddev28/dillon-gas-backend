@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+import uuid
 
 from apis.base_models import BaseModel
 
@@ -21,12 +22,16 @@ class Station(BaseModel):
 
 
 class StationInventory(BaseModel):
-    item = models.CharField(max_length=100)
+    item = models.ForeignKey('inventory.Item', on_delete=models.CASCADE, related_name='inventory')
     quantity = models.IntegerField()
     price = models.FloatField()
-    station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='inventory')
+    station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='inventory', null=True, blank=True)
     tax = models.FloatField(null=True, blank=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     class Meta:
         db_table = 'inventory'
         verbose_name_plural = 'inventories'
+
+    def __str__(self):
+        return self.item.name
