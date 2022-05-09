@@ -25,7 +25,9 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     )
     phone_number = models.CharField(
         max_length=15,
-        unique=True
+        unique=True,
+        null=True,
+        blank=True
     )
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
