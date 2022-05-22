@@ -11,6 +11,10 @@ class InventoryListSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     average_star_rating = serializers.SerializerMethodField()
+    item_uuid = serializers.SerializerMethodField()
+
+    def get_item_uuid(self, instance):
+        return instance.item.uuid
 
     def get_average_star_rating(self, instance):
         return StarRating.objects.filter(item__id=instance.item.id).aggregate(Avg('star_count')).get('star_count__avg')
@@ -26,7 +30,7 @@ class InventoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StationInventoryItem
-        fields = ['name', 'uuid', 'price', 'category', 'description', 'average_star_rating']
+        fields = ['name', 'item_uuid', 'price', 'category', 'description', 'average_star_rating']
 
 
 class InventoryDetailSerializer(serializers.ModelSerializer):
