@@ -12,6 +12,11 @@ class InventoryListSerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
     average_star_rating = serializers.SerializerMethodField()
     item_uuid = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+
+    def get_image(self, instance):
+        if getattr(instance.item, 'image'):
+           return instance.item.image.url
 
     def get_item_uuid(self, instance):
         return instance.item.uuid
@@ -30,7 +35,7 @@ class InventoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StationInventoryItem
-        fields = ['name', 'item_uuid', 'price', 'category', 'description', 'average_star_rating']
+        fields = ['name', 'item_uuid', 'price', 'category', 'description', 'average_star_rating', 'image']
 
 
 class InventoryDetailSerializer(serializers.ModelSerializer):

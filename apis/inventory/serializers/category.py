@@ -6,4 +6,4 @@ from apis.inventory.models import Category
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name', 'uuid']
+        fields = ['name', 'uuid', 'image']
