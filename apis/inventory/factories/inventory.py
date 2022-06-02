@@ -10,4 +10,4 @@ class ItemFactory(factory.django.DjangoModelFactory):
     category = factory.fuzzy.FuzzyChoice(Category.objects.all())
     bar_code = factory.fuzzy.FuzzyInteger(9000000000, 9999999999)
     description = factory.Faker('catch_phrase')
-    weight = factory.fuzzy.FuzzyInteger(1, 9)
+    weight = factory.fuzzy.FuzzyChoice(['1kg', '2kg'])
