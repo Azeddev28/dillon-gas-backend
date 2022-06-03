@@ -14,12 +14,12 @@ class CustomerDetailsSerializer(serializers.ModelSerializer):
 
 
 class CustomerAddressSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+            default=serializers.CurrentUserDefault(),
+            queryset=User.objects.all(),
+            write_only=True
+        )
+
     class Meta:
         model = CustomerAddress
-        fields = ['street_address', 'label']
-
-
-class CustomerAddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomerAddress
-        fields = '__all__'
+        exclude = ['id', 'created_at', 'updated_at', 'is_active']
