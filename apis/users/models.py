@@ -51,3 +51,13 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 class UserDevice(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='device')
     device_id = models.CharField(max_length=200)
+
+
+class CustomerAddress(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_addresses')
+    street_address = models.TextField()
+    building = models.CharField(max_length=50, null=True, blank=True)
+    city = models.CharField(max_length=100)
+    label = models.CharField(max_length=30, null=True, blank=True)
+    note_to_rider = models.TextField(null=True, blank=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
