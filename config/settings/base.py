@@ -61,7 +61,8 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
     'phonenumber_field',
-    'storages'
+    'storages',
+    'channels',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -97,13 +98,26 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.routing.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+# Caching configuration
+REDIS_CACHE_LOCATION = env('REDIS_CACHE_LOCATION')
+CACHE_DEFAULT_TIMEOUT = 24 * 60 * 60  # 24 hours
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': REDIS_CACHE_LOCATION,
+        'TIMEOUT': CACHE_DEFAULT_TIMEOUT,
+        'KEY_PREFIX': 'SPP_BACKEND',
+        'OPTIONS': {
+            'DB': 1,
+            'SOCKET_TIMEOUT': 5,
+            'SOCKET_CONNECT_TIMEOUT': 5,
+        },
+    },
+}
 AUTH_USER_MODEL = 'users.User'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -155,6 +169,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, ''),
 )
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
