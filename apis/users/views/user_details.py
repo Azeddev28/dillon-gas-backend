@@ -1,9 +1,9 @@
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 
 from apis.users.serializers.customer import CustomerDetailsSerializer
 
 
-class CustomerDetailsRetrieveAPIView(RetrieveAPIView):
+class CustomerDetailsRetrieveAPIView(RetrieveUpdateAPIView):
     serializer_class = CustomerDetailsSerializer
 
     def get_object(self):
