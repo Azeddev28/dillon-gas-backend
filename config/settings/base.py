@@ -60,7 +60,8 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
     'phonenumber_field',
-    'storages'
+    'storages',
+    'channels',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -96,13 +97,26 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.routing.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+# Caching configuration
+REDIS_CACHE_LOCATION = env('REDIS_CACHE_LOCATION')
+CACHE_DEFAULT_TIMEOUT = 24 * 60 * 60  # 24 hours
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': REDIS_CACHE_LOCATION,
+        'TIMEOUT': CACHE_DEFAULT_TIMEOUT,
+        'KEY_PREFIX': 'SPP_BACKEND',
+        'OPTIONS': {
+            'DB': 1,
+            'SOCKET_TIMEOUT': 5,
+            'SOCKET_CONNECT_TIMEOUT': 5,
+        },
+    },
+}
 AUTH_USER_MODEL = 'users.User'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -155,6 +169,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, ''),
 )
 
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -162,8 +178,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # EMAIL SETUP
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_USE_TLS = True
 EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
