@@ -53,7 +53,8 @@ PROJECT_APPS = [
     'apis.inventory',
     'apis.promotions',
     'apis.orders',
-    'apis.ratings'
+    'apis.ratings',
+    'apis.wallets'
 ]
 
 THIRD_PARTY_APPS = [
