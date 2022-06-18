@@ -1,6 +1,7 @@
 from django.db.models import Avg
 
 from rest_framework import serializers
+from apis.inventory.models import ItemQualification
 
 from apis.ratings.models import StarRating
 from apis.stations.models import StationInventoryItem
@@ -61,3 +62,9 @@ class InventoryDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = StationInventoryItem
         fields = ['name', 'uuid', 'price', 'category', 'description']
+
+
+class ItemQualificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ItemQualification
+        fields = ['qualification', ]

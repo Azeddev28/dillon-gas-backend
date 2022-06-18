@@ -30,3 +30,8 @@ class Item(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class ItemQualification(BaseModel):
+    qualification = models.TextField()
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='item_quailifications')
