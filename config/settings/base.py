@@ -100,6 +100,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.routing.application'
 
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+        'ROUTING': 'example_channels.routing.channel_routing',
+    }
+}
+
 # Caching configuration
 REDIS_CACHE_LOCATION = env('REDIS_CACHE_LOCATION')
 CACHE_DEFAULT_TIMEOUT = 24 * 60 * 60  # 24 hours
