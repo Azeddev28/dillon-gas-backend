@@ -12,9 +12,9 @@ class Wallet(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='wallet')
 
 
-class PaymentCard(BaseModel):
-    card_number = models.CharField(max_length=200)
-    cvv =  models.CharField(max_length=3)
-    expiry_month = models.CharField(max_length=2)
-    expiry_year = models.CharField(max_length=2)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payment_cards')
+# class PaymentCard(BaseModel):
+#     card_number = models.CharField(max_length=200)
+#     cvv =  models.CharField(max_length=3)
+#     expiry_month = models.CharField(max_length=2)
+#     expiry_year = models.CharField(max_length=2)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payment_cards')
