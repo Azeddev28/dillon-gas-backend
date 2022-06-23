@@ -42,7 +42,7 @@ class InventoryListSerializer(serializers.ModelSerializer):
         model = StationInventoryItem
         fields = ['name', 'item_uuid', 'price',
                   'category', 'description', 'average_star_rating', 'image',
-                  'weight']
+                  'weight', 'quantity']
 
 
 class InventoryDetailSerializer(serializers.ModelSerializer):
