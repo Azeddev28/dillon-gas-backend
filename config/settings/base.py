@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import environ
+from datetime import timedelta
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -179,3 +181,7 @@ FLUTTERWAVE_ADMIN_PHONE_NUMBER = env("FLUTTERWAVE_ADMIN_PHONE_NUMBER")
 FLUTTERWAVE_ADMIN_FIRST_NAME = env("FLUTTERWAVE_ADMIN_FIRST_NAME")
 FLUTTERWAVE_ADMIN_LAST_NAME = env("FLUTTERWAVE_ADMIN_LAST_NAME")
 FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATION = env("FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATION")
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=355)
+}
