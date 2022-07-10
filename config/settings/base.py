@@ -164,7 +164,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # EMAIL SETUP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST = 'smtp-relay.sendinblue.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
