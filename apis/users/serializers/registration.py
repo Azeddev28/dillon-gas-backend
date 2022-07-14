@@ -47,7 +47,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email', 'first_name', 'last_name',
                   'role', 'password', 'created_at', 'device_id',
-                  'is_active', 'verification_code']
+                  'is_active', 'verification_code', 'phone_number']
         read_only_fields = ['created_at', 'updated_at']
 
     @transaction.atomic
