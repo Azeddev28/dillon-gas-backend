@@ -9,7 +9,6 @@ class ResetPasswordSerializedr(serializers.Serializer):
     email = serializers.EmailField()
     new_password = serializers.CharField()
     confirm_password = serializers.CharField()
-    verification_code = serializers.CharField()
 
     def validate(self, attrs):
         result = super().validate(attrs)
@@ -25,10 +24,5 @@ class ResetPasswordSerializedr(serializers.Serializer):
             msg = 'User does not exist'
             raise serializers.ValidationError(msg)
 
-        verification_code = attrs.get('verification_code')
-        if self.context['request'].session.get('verification_code') != verification_code:
-            raise serializers.ValidationError(
-                {'verification_code': 'Invalid Verification Code!'}
-            )
         result['user'] = user
         return result

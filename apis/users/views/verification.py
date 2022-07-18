@@ -14,15 +14,15 @@ from apis.users.views.registraion import RegisterUserAPIView
 User = get_user_model()
 
 
-@method_decorator(catch_request_exception, name='post')
+# @method_decorator(catch_request_exception, name='post')
 class ResendEmailAPIView(RegisterUserAPIView):
     serializer_class = ResendEmailSerializer
     success_message = EMAIL_SENT_MESSAGE
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(self.get_error_message(serializer))
+        serializer.is_valid(raise_exception=True)
+            # return Response(self.get_error_message(serializer))
 
         user = serializer.validated_data.get('user')
         verification_code = serializer.validated_data.pop('verification_code')
@@ -37,7 +37,7 @@ class ResendEmailAPIView(RegisterUserAPIView):
         })
 
 
-@method_decorator(catch_request_exception, name='post')
+# @method_decorator(catch_request_exception, name='post')
 class EmailVerificationAPIView(BaseAPIView):
     """View to verify user email against generated code"""
     serializer_class = EmailVerificationSerializer
@@ -59,8 +59,7 @@ class EmailVerificationAPIView(BaseAPIView):
     def post(self, request, *args, **kwargs):
         self.validate_session()
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(self.get_error_message(serializer))
+        serializer.is_valid(raise_exception=True)
 
         user = serializer.validated_data.get('user')
         self.clear_session_data()
