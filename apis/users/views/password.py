@@ -15,11 +15,9 @@ class ResetPasswordAPIView(BaseAPIView):
         user.save()
 
     def post(self, request, *args, **kwargs):
-        self.validate_session()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        self.clear_session_data()
         self.save_password(serializer.validated_data)
         return Response({
             "message": self.success_message,
