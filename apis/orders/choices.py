@@ -1,28 +1,40 @@
-PAYMENT_STATUS_CHOICES = (
-    ('none', 'None'),
-    ('pending', 'Pending'),
-    ('completed', 'Completed'),
-    ('failed', 'Failed')
+class PaymentStatus:
+    PENDING = 1
+    COMPLETED = 1
+    FAILED = 2
+    CHOICES = (
+    (PENDING, 'Pending'),
+    (COMPLETED, 'Completed'),
+    (FAILED, 'Failed')
 )
 
-ORDER_STATUS_CHOICES = (
-    ('pending', 'Pending'),
-    ('delivered', 'Delivered'),
-    ('cancelled', 'Cancelled'),
-    ('returned', 'Returned'),
-    ('dispatched', 'Dispatched')
-)
+class OrderStatus:
+    PENDING = 1
+    DELIVERED = 2
+    CANCELLED = 3
+    RETURNED = 4
+    DISPATCHED = 5
+    CHOICES = (
+        (PENDING, 'Pending'),
+        (DELIVERED, 'Delivered'),
+        (CANCELLED, 'Cancelled'),
+        (RETURNED, 'Returned'),
+        (DISPATCHED, 'Dispatched')
+    )
 
 DISCOUNT_TYPE_CHOICES = (
     ('NGN', 'NGN'),
     ('percentage', 'PERCENTAGE')
 )
 
-PAYMENT_CHOICES = (
-    ('cash_on_delivery', 'Cash on Delivery'),
-    ('card', 'Card'),
-    ('cash_in_hand', 'Cash in Hand')
-)
+class PaymentMethods:
+    PAY_ONLINE = 1
+    WALLET = 2
+
+    CHOICES = (
+        (PAY_ONLINE, 'Pay Online'),
+        (WALLET, 'Wallet')
+    )
 
 ORDER_TYPE_CHOICES = (
     ('home_delivery', 'Home Delivery'),
