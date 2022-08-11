@@ -5,9 +5,8 @@ from django.db import models
 from apis.orders.choices import (DISCOUNT_TYPE_CHOICES, ORDER_STATUS_CHOICES,
                                  PAYMENT_CHOICES, PAYMENT_STATUS_CHOICES)
 from apis.orders.utils.order_generation import create_order_key
-from apis.stations.models import Station
+from apis.stations.models import Station, StationInventoryItem
 from apis.base_models import BaseModel
-from apis.inventory.models import Item
 
 
 User = get_user_model()
@@ -38,7 +37,7 @@ class Order(BaseModel):
 class OrderItem(BaseModel):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='order_item_item')
+    item = models.ForeignKey(StationInventoryItem, on_delete=models.CASCADE, related_name='order_item_item')
     quantity = models.IntegerField(default=1)
     is_cancelled = models.BooleanField(default=False)
 
