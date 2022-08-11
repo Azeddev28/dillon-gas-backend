@@ -3,6 +3,11 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
+from .serializer_fields.payment_status import PaymentStatusField
+
+from .serializer_fields.order_status import OrderStatusField
+from .serializer_fields.payment_method import PaymentMethodField
+
 from apis.stations.models import StationInventoryItem
 from apis.inventory.models import Item
 from apis.orders.models import Order, OrderItem
@@ -25,12 +30,14 @@ class OrderSerializer(serializers.ModelSerializer):
         slug_field='email'
     )
     order_items = OrderItemSerializer(many=True)
-    order_status = serializers.CharField(source='get_order_status_display', required=False)
-    payment_status = serializers.CharField(source='get_payment_status_display', required=False)
+    order_status = OrderStatusField(source='*', required=False)
+    payment_status = PaymentStatusField(source='*', required=False)
+    payment_method = PaymentMethodField(source='*')
+
 
     class Meta:
         model = Order
-        exclude = ['id', 'is_active']
+        exclude = ['id', 'is_active', 'station']
 
     def _create_order_items(self, order_items_data, order):
         order_items = [OrderItem(**order_item_data, order=order) for order_item_data in order_items_data]

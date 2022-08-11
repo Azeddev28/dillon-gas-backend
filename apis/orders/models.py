@@ -26,7 +26,6 @@ class Order(BaseModel):
     discount = models.FloatField(null=True, blank=True)
     discount_type = models.CharField(null=True, blank=True, choices=DISCOUNT_TYPE_CHOICES, max_length=30)
     tax = models.FloatField(null=True, blank=True)
-    returned_amount = models.FloatField(null=True, blank=True)
     payment_method = models.IntegerField(null=True, blank=True, choices=PaymentMethods.CHOICES, default=None)
     pickup_datetime = models.DateTimeField(null=True, blank=True)
 

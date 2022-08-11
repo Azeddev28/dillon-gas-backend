@@ -1,7 +1,7 @@
 class PaymentStatus:
     PENDING = 1
-    COMPLETED = 1
-    FAILED = 2
+    COMPLETED = 2
+    FAILED = 3
     CHOICES = (
     (PENDING, 'Pending'),
     (COMPLETED, 'Completed'),
