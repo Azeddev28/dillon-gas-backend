@@ -20,7 +20,7 @@ class InventoryListSerializer(serializers.ModelSerializer):
             return instance.item.image.url
 
     def get_item_uuid(self, instance):
-        return instance.item.uuid
+        return instance.uuid
 
     def get_average_star_rating(self, instance):
         return StarRating.objects.filter(item__id=instance.item.id).aggregate(Avg('star_count')).get('star_count__avg')
