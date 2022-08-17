@@ -10,14 +10,12 @@ from rest_framework.response import Response
 
 
 from apis.base_decorators import catch_request_exception
-from apis.users.authentication.token_auth import DGTokenAuthentication
 from apis.users.utils.messages import INVALID_REQUEST_MESSAGE, LOGOUT_MESSAGE
 
 
 @method_decorator(catch_request_exception, name='post')
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [DGTokenAuthentication]
     success_message = LOGOUT_MESSAGE
 
     def post(self, request):
@@ -27,5 +25,3 @@ class LogoutView(APIView):
             return Response({'message': self.success_message})
 
         return Response({'message': INVALID_REQUEST_MESSAGE})
-
-
