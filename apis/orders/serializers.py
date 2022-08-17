@@ -34,7 +34,6 @@ class OrderSerializer(serializers.ModelSerializer):
     payment_status = PaymentStatusField(source='*', required=False)
     payment_method = PaymentMethodField(source='*')
 
-
     class Meta:
         model = Order
         exclude = ['id', 'is_active', 'station']
@@ -47,5 +46,8 @@ class OrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         order_items_data = validated_data.pop('order_items')
         order = Order.objects.create(**validated_data)
-        self._create_order_items(order_items_data, order)
+        order_items = self._create_order_items(order_items_data, order)
+        base_price = sum([order_item.item.price for order_item in order_items])
+        order.base_price = base_price
+        order.total_price = base_price
         return order
