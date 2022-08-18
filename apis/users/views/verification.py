@@ -30,7 +30,7 @@ class ResendEmailAPIView(RegisterUserAPIView):
         email_service = EmailService(
             'Email Verification',
             [user.email,],
-            'email_templates/otp_email.html',
+            'email_templates/verification.html',
             {
                 'verification_code': verification_code
             }
