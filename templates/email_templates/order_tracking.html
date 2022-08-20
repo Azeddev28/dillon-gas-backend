@@ -56,11 +56,11 @@
         <div style="margin-bottom: 1rem;">
           {% for order_item in order.order_items.all %}
               <div style="display: flex; margin-bottom: 1rem; align-items: flex-end;">
-                <div style='justify-content: space-between; width:88%'>
-                  <p style="font-size: 0.75rem;
+                <p style="font-size: 0.75rem;
                       line-height: 1rem; 
                       font-weight: 400; 
                       color: #6A6A6A;">{{order_item.item.item.category.name}}</p>
+                <div style='width:88%'>
                   <p style="font-weight: 500; 
                       color: #1A1D1E;
                       font-size: 15px;">
