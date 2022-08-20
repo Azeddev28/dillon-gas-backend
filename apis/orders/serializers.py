@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
+from apis.orders.choices import OrderStatus
+
 from .serializer_fields.payment_status import PaymentStatusField
 
 from .serializer_fields.order_status import OrderStatusField
@@ -50,4 +52,6 @@ class OrderSerializer(serializers.ModelSerializer):
         base_price = sum([order_item.item.price for order_item in order_items])
         order.base_price = base_price
         order.total_price = base_price
+        order.order_status = OrderStatus.PROCESSING
+        order.save()
         return order

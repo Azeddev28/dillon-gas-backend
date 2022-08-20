@@ -1,13 +1,230 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
 </head>
 
-<body class="">
-    <p>Thank you for your order</p>
+<body>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <div>
+    <div style="padding-top: 2rem;
+          padding-bottom: 2rem; 
+          padding-left: 2rem;
+          padding-right: 2rem; 
+          background: #F8F8FC;">
+      <div style="  display: flex; 
+            margin-bottom: 2rem; 
+            justify-content: space-between; ">
+        <div style="width: 60%;">
+          <img src="{{ request.get_host }}{% static 'images/the_logo.svg' %}" height="75px" widht='20px'/>
+        </div>
+        <div style="display: flex; 
+          justify-content: space-between; 
+          width: 30%;">
+          <img src="{{ request.get_host }}{% static 'images/Facebook.svg' %}" height="24" width="24" />
+          <img src="{{ request.get_host }}{% static 'images/Twitter.svg' %}" height="24" width="24" />
+          <img src="{{ request.get_host }}{% static 'images/Instagram.svg' %}" height="24" width="24" />
+        </div>
+      </div>
+      <div class="mb-4">
+        <h4 style='margin-bottom: 1rem; 
+          font-size: 1.25rem;
+          line-height: 1.75rem; 
+          font-weight: 700; 
+          color: #121A26;
+          '>
+          Hi {{order.customer.first_name}}
+        </h4>
+        <p style="font-size: 0.875rem;
+          line-height: 1.25rem; 
+          font-weight: 400; 
+          color: #384860;
+          ">
+          We got your order! and its being processed. We’ll let you know when
+          it ships and is headed your way
+        </p>
+      </div>
+      <div>
+        <h4 style='margin-bottom: 1rem; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; color: #121A26;'>Order #{{order.order_key}}</h4>
+        <div style="margin-bottom: 1rem;">
+          {% for order_item in order.order_items.all %}
+              <div style="display: flex; margin-bottom: 1rem; justify-content: space-between;">
+                <div>
+                  <p style="font-size: 0.75rem;
+                      line-height: 1rem; 
+                      font-weight: 400; 
+                      color: #6A6A6A;">{{order_item.item.item.category.name}}</p>
+                </div>
+                <div>
+                  <p style="font-weight: 500; 
+                  color: #1A1D1E;
+                  font-size: 15px;">
+                  {{order_item.item.name}}
+                  <p style='font-size: 0.75rem;
+                      line-height: 1rem; 
+                      font-weight: 400; 
+                      color: #000000;'>₦{{order_item.item.price}}</p>
+
+                  </p>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 1rem; height: 3px; background: #D9D9D9;"></div>
+
+          {% endfor %}
+          <div style="display: flex; 
+        margin-bottom: 1rem; 
+        justify-content: space-between; 
+        align-items: flex-end; 
+        ">
+            <div>
+              <p style="font-size: 0.875rem;
+            line-height: 1.25rem; 
+            font-weight: 400; 
+            color: #323232;
+            ">Subtotal</p>
+            </div>
+            <div>
+              <p style='font-size: 0.875rem;
+            line-height: 1.25rem; 
+            font-weight: 400; 
+            color: #323232;'>₦{{order.base_price}}</p>
+            </div>
+          </div>
+          <div style="display: flex; 
+          margin-bottom: 1rem; 
+          justify-content: space-between; 
+          align-items: flex-end; 
+          ">
+            <div>
+              <p style="font-size: 0.875rem;
+              line-height: 1.25rem; 
+              font-weight: 400; 
+              color: #323232;">Delivery</p>
+            </div>
+            <div>
+              <p style="font-size: 0.875rem;
+              line-height: 1.25rem; 
+              font-weight: 400; 
+              color: #323232;
+              ">₦0</p>
+            </div>
+          </div>
+          <div style="margin-bottom: 1rem; 
+          border-style: solid; 
+          height: 0px; background: #EBEBEB;"></div>
+          <div style="display: flex; 
+          margin-bottom: 1rem; 
+          justify-content: space-between; 
+          align-items: flex-end; 
+          ">
+            <div>
+              <p style="font-size: 0.875rem;
+              line-height: 1.25rem; 
+              font-weight: 400; 
+              color: #323232;">Total Paid</p>
+            </div>
+            <div>
+              <p style="font-weight: 400; 
+              color: #323232;
+              font-size: 15px;">₦{{order.total_price}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p style="margin-bottom: 1rem; 
+        font-size: 1rem;
+        line-height: 1.5rem; 
+        font-weight: 700; 
+        color: #121A26;
+        ">
+          Delivery Details
+        </p>
+        <p style="margin-bottom: 1rem; 
+        font-size: 0.875rem;
+        line-height: 1.25rem; 
+        color: #384860;
+        ">
+          For: <span style="font-weight: 700;">{{order.customer.first_name}} {{order.customer.last_name}}</span><br />
+          Address: {{customer_address.street_address}}, {{customer_address.city}}<br />
+          {{customer_address.city}}, {{customer_address.state}}, Nigeria.
+        </p>
+        <p style="margin-bottom: 1rem; 
+        font-size: 0.875rem;
+        line-height: 1.25rem; 
+        color: #384860;
+        ">Thank you.</p>
+      </div>
+    </div>
+    <div style="padding-top: 3rem;
+        padding-bottom: 3rem; 
+        text-align: center; 
+        background: #FFE9EA;
+        ">
+      <p style="font-size: 0.875rem;
+        line-height: 1.25rem; 
+        font-weight: 600; 
+        color: #121A26;
+        ">Got questions?</p>
+      <p style="margin-top: 0.5rem; 
+        font-size: 0.875rem;
+        line-height: 1.25rem; 
+        font-weight: 400; 
+        color: #2969FF;
+        ">+2348090564424</p>
+    </div>
+    <div style="padding-top: 2rem;
+        padding-bottom: 2rem; 
+        padding-left: 2rem;
+        padding-right: 2rem; 
+        background: #F8F8FC;
+      ">
+      <div style="margin-bottom: 0.5rem;">
+        <p style="font-size: 0.75rem;
+          line-height: 1rem; 
+          font-weight: 400; 
+          color: #9D9D9D;
+          ">
+          COPYRIGHT 2020 DILLION GAS NIGERIA<br />
+          Plot 1 Gary Sanusi Close off Platinum Road, Jakande<br />
+          Lekki, Lagos State, Nigeria.
+        </p>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
+
+{% comment %}
+<div class="flex justify-between items-end mb-4">
+  <div>
+    <p class="text-[#6A6A6A] text-xs font-normal">Cylinder</p>
+    <p class="text-[#1A1D1E] font-medium text-[15px]">
+      12.5kg - Gas Cylinder
+    </p>
+  </div>
+  <div>
+    <p class="text-[#000000] text-xs font-normal">₦60,000</p>
+  </div>
+</div>
+<div class="h-[3px] bg-[#D9D9D9] mb-4"></div>
+<div class="flex justify-between items-end mb-4">
+  <div>
+    <p class="text-[#6A6A6A] text-xs font-normal">Cylinder</p>
+    <p class="text-[#1A1D1E] font-medium text-[15px]">
+      12.5kg - Gas Cylinder
+    </p>
+  </div>
+  <div>
+    <p class="text-[#000000] text-xs font-normal">₦60,000</p>
+  </div>
+</div>
+<div class="h-[3px] bg-[#D9D9D9] mb-8"></div> {% endcomment %}

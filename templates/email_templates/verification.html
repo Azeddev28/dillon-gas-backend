@@ -1,13 +1,89 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-</head>
-
-<body class="">
-    <p>Your verification code is: <strong>{{verification_code}}</strong></p>
-</body>
-
-</html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <div>
+      <div style="padding-top: 2rem;
+      padding-bottom: 2rem; 
+      padding-left: 2rem;
+      padding-right: 2rem; 
+      background: #F8F8FC;">
+        <div style="  display: flex; 
+        margin-bottom: 2rem; 
+        justify-content: space-between; ">
+          <div style="width: 60%;">
+            <img src="{{ request.get_host }}{% static 'images/the_logo.svg' %}" height="75px" widht='20px'/>
+          </div>
+          <div style="display: flex; 
+          justify-content: space-between; 
+          width: 30%;">
+            <img src="{{ request.get_host }}{% static 'images/Facebook.svg' %}" height="24" width="24" />
+            <img src="{{ request.get_host }}{% static 'images/Twitter.svg' %}" height="24" width="24" />
+            <img src="{{ request.get_host }}{% static 'images/Instagram.svg' %}" height="24" width="24" />
+          </div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <p style="font-size: 0.875rem;
+          line-height: 1.25rem; 
+          font-weight: 400; 
+          color: #384860;
+          ">
+            To reset your password, please use the 6 digits verification below.
+          </p>
+        </div>
+        <div style="font-size: 2.25rem;
+        line-height: 2.5rem; 
+        text-align: center; 
+        background: #FFE5E5;
+        width: 20%;
+        ">
+          <div style="margin-bottom: 1rem;">
+            <p style="font-weight: 600;">{{verification_code}}</p>
+          </div>
+        </div>
+      </div>
+      <div style="padding-top: 3rem;
+      padding-bottom: 3rem; 
+      text-align: center; 
+      background: #FFE9EA;
+      ">
+        <p style="font-size: 0.875rem;
+        line-height: 1.25rem; 
+        font-weight: 600; 
+        color: #121A26;
+        ">Got questions?</p>
+        <p style="margin-top: 0.5rem; 
+        font-size: 0.875rem;
+        line-height: 1.25rem; 
+        font-weight: 400; 
+        color: #2969FF;
+        ">+2348090564424</p>
+      </div>
+      <div style="padding-top: 2rem;
+      padding-bottom: 2rem; 
+      padding-left: 2rem;
+      padding-right: 2rem; 
+      background: #F8F8FC;
+      ">
+        <div style="margin-bottom: 0.5rem;">
+          <p style="font-size: 0.75rem;
+          line-height: 1rem; 
+          font-weight: 400; 
+          color: #9D9D9D;
+          ">
+            COPYRIGHT 2020 DILLION GAS NIGERIA<br />
+            Plot 1 Gary Sanusi Close off Platinum Road, Jakande<br />
+            Lekki, Lagos State, Nigeria.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>
