@@ -53,7 +53,7 @@
       </div>
       <div>
         <h4 style='margin-bottom: 1rem; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; color: #121A26;'>Order #{{order.order_key}}</h4>
-        <div style="margin-bottom: 1rem;">
+        <div style="margin-bottom: 1rem; display: flex;">
           {% for order_item in order.order_items.all %}
               <div style="display: flex; margin-bottom: 1rem; align-items: flex-end;">
                 {% comment %} <div style='width:100%'>
