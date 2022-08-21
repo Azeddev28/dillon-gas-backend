@@ -10,29 +10,14 @@
     rel="stylesheet">
 </head>
 
-<body style='justify-content: space-between'>
-  <script src="https://cdn.tailwindcss.com"></script>
+<body>
   <div>
     <div style="padding-top: 2rem;
           padding-bottom: 2rem; 
           padding-left: 2rem;
           padding-right: 2rem; 
           background: #F8F8FC;">
-      <div style="display: flex; 
-            margin-bottom: 2rem; 
-            align-items: flex-end;
-            justify-content: space-between; ">
-        <div style="width: 60%;">
-          <img src="http://161.35.189.93/static/images/the_logo.png" height="75px" widht='20px'/>
-        </div>
-        <div style="display: flex; 
-          justify-content: space-between; 
-          width: 20%; text-align:end">
-          <img src="http://161.35.189.93/static/images/Facebook.png" height="24" width="24" />
-          <img src="http://161.35.189.93/static/images/Twitter.png" height="24" width="24" />
-          <img src="http://161.35.189.93/static/images/Instagram.png" height="24" width="24" />
-        </div>
-      </div>
+      {% include 'email_templates/email_header.html' %}
       <div class="mb-4">
         <h4 style='margin-bottom: 1rem; 
           font-size: 1.25rem;
@@ -54,86 +39,90 @@
       <div>
         <h4 style='margin-bottom: 1rem; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; color: #121A26;'>Order #{{order.order_key}}</h4>
         <div style="margin-bottom: 1rem; display: flex;">
-          {% for order_item in order.order_items.all %}
-              <div style="display: flex; margin-bottom: 1rem; align-items: flex-end;">
-                {% comment %} <div style='width:100%'>
-                  <p style="font-size: 0.75rem;
-                      line-height: 1rem; 
+          <table style='width:100%'>
+            {% for order_item in order.order_items.all %}
+                <tr colspan="12">
+                  <td colspan='6' align='left'>
+                    <p style="font-weight: 500; 
+                        color: #1A1D1E;
+                        font-size: 15px;">
+                        {{order_item.item.name}}
+                    <p>
+                    </td>
+                  <td colspan='6' align='right'>
+
+                    <p style='font-size: 0.75rem;
+                        line-height: 1rem; 
+                        font-weight: 400; 
+                        color: #000000;'>₦{{order_item.item.price}}</p>
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan='12'>
+                    <div style="margin-bottom: 1rem; height: 3px; background: #D9D9D9;"></div>
+                  </td>
+                </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+        <div style="margin-bottom: 1rem; display: flex;">
+          <table style='width:100%'>
+                <tr colspan="12">
+                  <td colspan='6' align='left'>
+                    <p style="font-size: 0.875rem;
+                      line-height: 1.25rem; 
                       font-weight: 400; 
-                      color: #6A6A6A;">{{order_item.item.item.category.name}}</p> {% endcomment %}
-                </div>
-                <div style='width:88%'>
-                  <p style="font-weight: 500; 
-                      color: #1A1D1E;
-                      font-size: 15px;">
-                      {{order_item.item.name}}
-                </div>
-                <div style='text-align: end; width:12%'>
+                      color: #323232;">Subtotal</p>
+                    </td>
+                  <td colspan='6' align='right'>
 
-                  <p style='font-size: 0.75rem;
-                      line-height: 1rem; 
+                    <p style='font-size: 0.875rem;
+                      line-height: 1.25rem; 
                       font-weight: 400; 
-                      color: #000000;'>₦{{order_item.item.price}}</p>
+                      color: #323232;'>₦{{order.base_price}}</p>
+                  </td>
+                </tr>
+                <tr colspan="12">
+                  <td colspan='6' align='left'>
+                    <p style="font-size: 0.875rem;
+                      line-height: 1.25rem; 
+                      font-weight: 400; 
+                      color: #323232;">Delivery</p>
+                    </td>
+                  <td colspan='6' align='right'>
 
-                  </p>
-                </div>
-              </div>
+                    <p style='font-size: 0.875rem;
+                      line-height: 1.25rem; 
+                      font-weight: 400; 
+                      color: #323232;'>₦0</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan='12'>
+                    <div style="margin-bottom: 1rem; 
+                    border-style: solid; 
+                    height: 0px; background: #EBEBEB;"></div>
+                  </td>
+                </tr>
+                <tr colspan="12">
+                  <td colspan='6' align='left'>
+                    <p style="font-size: 0.875rem;
+                      line-height: 1.25rem; 
+                      font-weight: 400; 
+                      color: #323232;">Total Paid</p>
+                    </td>
+                  <td colspan='6' align='right'>
 
-              <div style="margin-bottom: 1rem; height: 3px; background: #D9D9D9;"></div>
-
-          {% endfor %}
-          <div style="display: flex; 
-              margin-bottom: 1rem; 
-              justify-content: space-between;
-              margin-right: auto">
-            <div style='width:88%'>
-              <p style="font-size: 0.875rem;
-              line-height: 1.25rem; 
-              font-weight: 400; 
-              color: #323232;">Subtotal</p>
-            </div>
-            <div style='text-align: end; width:12%'>
-              <p style='font-size: 0.875rem;
-            line-height: 1.25rem; 
-            font-weight: 400; 
-            color: #323232;'>₦{{order.base_price}}</p>
-            </div>
-          </div>
-          <div style="display: flex; 
-          margin-bottom: 1rem; 
-          justify-content: space-between;">
-            <div style='width:88%'>
-              <p style="font-size: 0.875rem;
-              line-height: 1.25rem; 
-              font-weight: 400; 
-              color: #323232;">Delivery</p>
-            </div>
-            <div style='text-align: end; width:12%'>
-              <p style="font-size: 0.875rem;
-              line-height: 1.25rem; 
-              font-weight: 400; 
-              color: #323232;
-              ">₦0</p>
-            </div>
-          </div>
-          <div style="margin-bottom: 1rem; 
-          border-style: solid; 
-          height: 0px; background: #EBEBEB;"></div>
-          <div style="display: flex; 
-          margin-bottom: 1rem; 
-          justify-content: space-between;">
-            <div style='width:88%'>
-              <p style="font-size: 0.875rem;
-              line-height: 1.25rem; 
-              font-weight: 400; 
-              color: #323232;">Total Paid</p>
-            </div>
-            <div style='text-align: end; width:12%'>
-              <p style="font-weight: 400; 
-              color: #323232;
-              font-size: 15px;">₦{{order.total_price}}</p>
-            </div>
-          </div>
+                    <p style='font-size: 0.875rem;
+                      line-height: 1.25rem; 
+                      font-weight: 400; 
+                      color: #323232;'>₦{{order.total_price}}</p>
+                  </td>
+                </tr>
+          </table>
+        </div>
         </div>
       </div>
       <div>
@@ -161,68 +150,8 @@
         ">Thank you.</p>
       </div>
     </div>
-    <div style="padding-top: 3rem;
-        padding-bottom: 3rem; 
-        text-align: center; 
-        background: #FFE9EA;
-        ">
-      <p style="font-size: 0.875rem;
-        line-height: 1.25rem; 
-        font-weight: 600; 
-        color: #121A26;
-        ">Got questions?</p>
-      <p style="margin-top: 0.5rem; 
-        font-size: 0.875rem;
-        line-height: 1.25rem; 
-        font-weight: 400; 
-        color: #2969FF;
-        ">+2348090564424</p>
-    </div>
-    <div style="padding-top: 2rem;
-        padding-bottom: 2rem; 
-        padding-left: 2rem;
-        padding-right: 2rem; 
-        background: #F8F8FC;
-      ">
-      <div style="margin-bottom: 0.5rem;">
-        <p style="font-size: 0.75rem;
-          line-height: 1rem; 
-          font-weight: 400; 
-          color: #9D9D9D;
-          ">
-          COPYRIGHT 2020 DILLION GAS NIGERIA<br />
-          Plot 1 Gary Sanusi Close off Platinum Road, Jakande<br />
-          Lekki, Lagos State, Nigeria.
-        </p>
-      </div>
-    </div>
+    {% include 'email_templates/email_footer.html' %}
   </div>
 </body>
 
 </html>
-
-{% comment %}
-<div class="flex justify-between items-end mb-4">
-  <div>
-    <p class="text-[#6A6A6A] text-xs font-normal">Cylinder</p>
-    <p class="text-[#1A1D1E] font-medium text-[15px]">
-      12.5kg - Gas Cylinder
-    </p>
-  </div>
-  <div>
-    <p class="text-[#000000] text-xs font-normal">₦60,000</p>
-  </div>
-</div>
-<div class="h-[3px] bg-[#D9D9D9] mb-4"></div>
-<div class="flex justify-between items-end mb-4">
-  <div>
-    <p class="text-[#6A6A6A] text-xs font-normal">Cylinder</p>
-    <p class="text-[#1A1D1E] font-medium text-[15px]">
-      12.5kg - Gas Cylinder
-    </p>
-  </div>
-  <div>
-    <p class="text-[#000000] text-xs font-normal">₦60,000</p>
-  </div>
-</div>
-<div class="h-[3px] bg-[#D9D9D9] mb-8"></div> {% endcomment %}
