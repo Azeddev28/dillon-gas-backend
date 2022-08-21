@@ -33,5 +33,10 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+class CustomerAddressAdmin(admin.ModelAdmin):
+    list_display = ['user', 'street_address', 'city', 'state']
+    class Meta:
+        model = CustomerAddress
+
 admin.site.register(User, UserAdmin)
-admin.site.register(CustomerAddress)
+admin.site.register(CustomerAddress, CustomerAddressAdmin)
