@@ -6,6 +6,7 @@ from apis.users.bindings import (auth_token_view, logout_view,
                                  email_verification_view, register_view,
                                  resend_email_view, reset_password_view,
                                  customer_details_view, customer_address_viewset)
+from apis.users.views.index import index
 
 
 user_router = routers.SimpleRouter()
@@ -19,6 +20,7 @@ urlpatterns = [
     path('verify-account/', email_verification_view, name='account-verification'),
     path('resend-email/', resend_email_view, name='resend-email'),
     path('reset-password/', reset_password_view, name='reset-password'),
-    path('user-details/', customer_details_view, name='user-details')
+    path('user-details/', customer_details_view, name='user-details'),
+    path('test/', index, name='index')
 ]
 urlpatterns =  urlpatterns + user_router.urls

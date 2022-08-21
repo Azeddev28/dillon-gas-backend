@@ -28,6 +28,7 @@ class Order(BaseModel):
     tax = models.FloatField(null=True, blank=True)
     payment_method = models.IntegerField(null=True, blank=True, choices=PaymentMethods.CHOICES, default=None)
     pickup_datetime = models.DateTimeField(null=True, blank=True)
+    delivery_time = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.order_key

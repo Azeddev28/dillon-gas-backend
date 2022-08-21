@@ -1,0 +1,89 @@
+<div>
+    <h4 style='margin-bottom: 1rem; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; color: #121A26;'>Order #{{order.order_key}}</h4>
+    <div style="margin-bottom: 1rem; display: flex;">
+      <table style='width:100%'>
+        {% for order_item in order.order_items.all %}
+            <tr colspan="12">
+              <td colspan='6' align='left'>
+                <p style="font-weight: 500; 
+                    color: #1A1D1E;
+                    font-size: 15px;">
+                    {{order_item.item.name}}
+                <p>
+                </td>
+              <td colspan='6' align='right'>
+
+                <p style='font-size: 0.75rem;
+                    line-height: 1rem; 
+                    font-weight: 400; 
+                    color: #000000;'>₦{{order_item.item.price}}</p>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan='12'>
+                <div style="margin-bottom: 1rem; height: 3px; background: #D9D9D9;"></div>
+              </td>
+            </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div style="margin-bottom: 1rem; display: flex;">
+      <table style='width:100%'>
+            <tr colspan="12">
+              <td colspan='6' align='left'>
+                <p style="font-size: 0.875rem;
+                  line-height: 1.25rem; 
+                  font-weight: 400; 
+                  color: #323232;">Subtotal</p>
+                </td>
+              <td colspan='6' align='right'>
+
+                <p style='font-size: 0.875rem;
+                  line-height: 1.25rem; 
+                  font-weight: 400; 
+                  color: #323232;'>₦{{order.base_price}}</p>
+              </td>
+            </tr>
+            <tr colspan="12">
+              <td colspan='6' align='left'>
+                <p style="font-size: 0.875rem;
+                  line-height: 1.25rem; 
+                  font-weight: 400; 
+                  color: #323232;">Delivery</p>
+                </td>
+              <td colspan='6' align='right'>
+
+                <p style='font-size: 0.875rem;
+                  line-height: 1.25rem; 
+                  font-weight: 400; 
+                  color: #323232;'>₦0</p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan='12'>
+                <div style="margin-bottom: 1rem; 
+                border-style: solid; 
+                height: 0px; background: #EBEBEB;"></div>
+              </td>
+            </tr>
+            <tr colspan="12">
+              <td colspan='6' align='left'>
+                <p style="font-size: 0.875rem;
+                  line-height: 1.25rem; 
+                  font-weight: 400; 
+                  color: #323232;">Total Paid</p>
+                </td>
+              <td colspan='6' align='right'>
+
+                <p style='font-size: 0.875rem;
+                  line-height: 1.25rem; 
+                  font-weight: 400; 
+                  color: #323232;'>₦{{order.total_price}}</p>
+              </td>
+            </tr>
+      </table>
+    </div>
+    </div>
+  </div>

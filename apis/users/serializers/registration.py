@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 
 from rest_framework import serializers
+from apis.services.email_service import EmailService
 
 from apis.users.models import UserDevice
 from apis.users.services.email_verification import EmailVerificationService
@@ -23,11 +24,15 @@ def _create_user(validated_data):
 
 
 def _verify_user(user_email, verification_code):
-    email_service = EmailVerificationService(
-        recipient_email=user_email,
-        verification_code=verification_code
+    email_service = EmailService(
+        'Registration Verification',
+        [user_email,],
+        'email_templates/registration.html',
+        {
+            'verification_code': verification_code
+        }
     )
-    email_service.send_email()
+    email_service.start()
 
 
 class DeviceSerializer(serializers.ModelSerializer):

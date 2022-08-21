@@ -6,8 +6,8 @@ from rest_framework.exceptions import ParseError
 
 from apis.base_decorators import catch_request_exception
 from apis.base_views import BaseAPIView
+from apis.services.email_service import EmailService
 from apis.users.serializers.verification import EmailVerificationSerializer, ResendEmailSerializer
-from apis.users.services.email_verification import EmailVerificationService
 from apis.users.utils.messages import EMAIL_SENT_MESSAGE, EMAIL_VERIFICATION_MESSAGE
 from apis.users.views.registraion import RegisterUserAPIView
 
@@ -27,11 +27,15 @@ class ResendEmailAPIView(RegisterUserAPIView):
         user = serializer.validated_data.get('user')
         verification_code = serializer.validated_data.pop('verification_code')
         self.save_session_params(user.email, verification_code)
-        email_service = EmailVerificationService(
-            recipient_email=user.email,
-            verification_code=verification_code
+        email_service = EmailService(
+            'Email Verification',
+            [user.email,],
+            'email_templates/verification.html',
+            {
+                'verification_code': verification_code
+            }
         )
-        email_service.send_email()
+        email_service.start()
         return Response({
             "message": self.success_message,
         })

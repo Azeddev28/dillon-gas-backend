@@ -10,16 +10,18 @@ class PaymentStatus:
 
 class OrderStatus:
     PENDING = 1
-    DELIVERED = 2
+    PROCESSING = 2
     CANCELLED = 3
     RETURNED = 4
     DISPATCHED = 5
+    COMPLETED = 6
     CHOICES = (
         (PENDING, 'Pending'),
-        (DELIVERED, 'Delivered'),
+        (PROCESSING, 'Processing'),
         (CANCELLED, 'Cancelled'),
         (RETURNED, 'Returned'),
-        (DISPATCHED, 'Dispatched')
+        (DISPATCHED, 'Dispatched'),
+        (COMPLETED, 'Completed')
     )
 
 DISCOUNT_TYPE_CHOICES = (
