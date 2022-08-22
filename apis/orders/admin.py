@@ -5,13 +5,14 @@ from apis.orders.utils.admin_restricted_field_choices import NON_EDITABLE_ORDER_
 
 class OrderItemInline(admin.StackedInline):
     model = OrderItem
-    fields = ['name', 'uuid']
+    exclude = ['is_active',]
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_key', 'order_status', 'created_at']
-    readonly_fields = ['customer', 'order_key', 'base_price', 'total_price']
+    list_display = ['order_number', 'order_status', 'created_at']
+    readonly_fields = ['customer', 'order_number', 'base_price', 'total_price']
     exclude = ['station']
+    inlines = [OrderItemInline]
 
     class Meta:
         model = Order

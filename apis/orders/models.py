@@ -14,7 +14,7 @@ User = get_user_model()
 
 class Order(BaseModel):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    order_key = models.CharField(max_length=40, null=True, blank=True, unique=True, default=create_order_key)
+    order_number = models.CharField(max_length=40, null=True, blank=True, unique=True, default=create_order_key)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_orders')
     station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='station_orders', null=True, blank=True)
     order_status = models.IntegerField(null=True, blank=True, choices=OrderStatus.CHOICES, default=OrderStatus.PENDING)
@@ -31,7 +31,7 @@ class Order(BaseModel):
     delivery_time = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return self.order_key
+        return self.order_number
 
 
 class OrderItem(BaseModel):

@@ -1,5 +1,5 @@
 <div>
-    <h4 style='margin-bottom: 1rem; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; color: #121A26;'>Order #{{order.order_key}}</h4>
+    <h4 style='margin-bottom: 1rem; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; color: #121A26;'>Order #{{order.order_number}}</h4>
     <div style="margin-bottom: 1rem; display: flex;">
       <table style='width:100%'>
         {% for order_item in order.order_items.all %}
