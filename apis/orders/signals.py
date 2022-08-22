@@ -22,14 +22,20 @@ def order_tracking(sender, instance, **kwargs):
     if prev_order_status == instance.order_status:
         return
 
-    template_name = order_tracking_template_mapping.get(instance.order_status)
-    email_service = EmailService(
-        'Order Tracking',
-        [instance.customer.email, ],
-        template_name,
-        {
-            'order': instance,
-            'customer_address': instance.customer.user_addresses.filter(selected=True).first()
-        }
-    )
-    email_service.start()
+    template_name = order_tracking_template_mapping.get(instance.get_order_status_display())
+    if not template_name:
+        return
+
+    try:
+        email_service = EmailService(
+            'Order Tracking',
+            [instance.customer.email, ],
+            template_name,
+            {
+                'order': instance,
+                'customer_address': instance.customer.user_addresses.filter(selected=True).first()
+            }
+        )
+        email_service.start()
+    except Exception as e:
+        pass
