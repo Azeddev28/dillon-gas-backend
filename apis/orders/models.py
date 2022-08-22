@@ -43,3 +43,27 @@ class OrderItem(BaseModel):
 
     def __str__(self):
         return self.item.name
+
+    @classmethod
+    def check_inventory(cls, raw_order_items):
+        out_of_stock_items = [
+            {
+                'item': dict(inventory_item).get('item').uuid,
+                'available_quantity': dict(inventory_item).get('item').quantity
+            }
+            for inventory_item in raw_order_items
+            if dict(inventory_item).get('item').out_of_stock(dict(inventory_item).get('quantity'))
+        ]
+        return out_of_stock_items
+
+    @classmethod
+    def deduct_inventory(cls, order_items):
+        station_inventory_items = [
+            order_item.item for order_item in order_items
+        ]
+        updated_inventory = []
+        for inventory_item, order_item in zip(station_inventory_items, order_items):
+            inventory_item.quantity -= order_item.quantity
+            updated_inventory.append(inventory_item)
+
+        StationInventoryItem.objects.bulk_update(updated_inventory, ['quantity'])
