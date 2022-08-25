@@ -7,6 +7,7 @@ from apis.orders.choices import (DISCOUNT_TYPE_CHOICES, OrderStatus,
 from apis.orders.utils.order_generation import create_order_key
 from apis.stations.models import Station, StationInventoryItem
 from apis.base_models import BaseModel
+from apis.transactions.models import Transaction
 
 
 User = get_user_model()
@@ -29,6 +30,7 @@ class Order(BaseModel):
     payment_method = models.IntegerField(null=True, blank=True, choices=PaymentMethods.CHOICES, default=None)
     pickup_datetime = models.DateTimeField(null=True, blank=True)
     delivery_time = models.DateTimeField(null=True, blank=True)
+    transaction = models.OneToOneField(Transaction, on_delete=models.DO_NOTHING, related_name='order', null=True, blank=True)
 
     def __str__(self):
         return self.order_number

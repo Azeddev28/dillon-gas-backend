@@ -1,18 +1,15 @@
-from curses import keyname
 from django.contrib.auth import get_user_model
+from django.db import transaction as db_transaction
 
 from rest_framework import serializers
 
 from apis.orders.choices import OrderStatus
-
-from .serializer_fields.payment_status import PaymentStatusField
-
-from .serializer_fields.order_status import OrderStatusField
-from .serializer_fields.payment_method import PaymentMethodField
-
+from apis.orders.serializer_fields.payment_status import PaymentStatusField
+from apis.orders.serializer_fields.order_status import OrderStatusField
+from apis.orders.serializer_fields.payment_method import PaymentMethodField
 from apis.stations.models import StationInventoryItem
-from apis.inventory.models import Item
 from apis.orders.models import Order, OrderItem
+from apis.transactions.models import Transaction
 
 User = get_user_model()
 
@@ -25,6 +22,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = ['item', 'uuid', 'quantity']
 
 
+class TransactionBriefInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ['reference',]
+
+
 class OrderSerializer(serializers.ModelSerializer):
     customer = serializers.SlugRelatedField(
         default=serializers.CurrentUserDefault(), 
@@ -35,16 +38,30 @@ class OrderSerializer(serializers.ModelSerializer):
     order_status = OrderStatusField(source='*', required=False)
     payment_status = PaymentStatusField(source='*', required=False)
     payment_method = PaymentMethodField(source='*')
+    transaction = TransactionBriefInfoSerializer(many=False, required=False)
 
     class Meta:
         model = Order
         exclude = ['id', 'is_active', 'station']
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['transaction'] = response.get('transaction').get('reference')
+        return response
 
     def _create_order_items(self, order_items_data, order):
         order_items = [OrderItem(**order_item_data, order=order) for order_item_data in order_items_data]
         order_items = OrderItem.objects.bulk_create(order_items)
         return order_items
 
+    def _create_transaction(self, amount, user):
+        transaction = Transaction.objects.create(
+            amount=amount,
+            user=user
+        )
+        return transaction
+
+    @db_transaction.atomic
     def create(self, validated_data):
         order_items_data = validated_data.pop('order_items')
         order = Order.objects.create(**validated_data)
@@ -53,5 +70,6 @@ class OrderSerializer(serializers.ModelSerializer):
         order.base_price = base_price
         order.total_price = base_price
         order.order_status = OrderStatus.PROCESSING
+        order.transaction = self._create_transaction(order.total_price, validated_data.get('customer'))
         order.save()
         return order
