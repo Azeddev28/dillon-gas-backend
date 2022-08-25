@@ -8,6 +8,7 @@ from apis.orders.serializers import OrderSerializer
 class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
+    lookup_field = 'uuid'
 
     def get_queryset(self):
         return Order.objects.filter(customer=self.request.user).order_by('-created_at')
