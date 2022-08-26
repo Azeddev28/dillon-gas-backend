@@ -1,4 +1,4 @@
-class TransactionStatusChoices:
+class TransactionStatus:
     PENDING = 0
     FAILED = 1
     COMPLETED = 2

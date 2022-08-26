@@ -6,13 +6,17 @@ from apis.orders.utils.admin_restricted_field_choices import NON_EDITABLE_ORDER_
 class OrderItemInline(admin.StackedInline):
     model = OrderItem
     exclude = ['is_active',]
+    extra = 0
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_number', 'order_status', 'created_at']
-    readonly_fields = ['customer', 'order_number', 'base_price', 'total_price']
-    exclude = ['station']
+    list_display = ['uuid', 'order_number', 'order_status', 'created_at']
+    readonly_fields = ['customer', 'order_number', 'base_price', 'total_price', 'customer_address', 'transaction']
+    exclude = ['station',]
     inlines = [OrderItemInline]
+
+    def customer_address(self, instance):
+        return instance.customer.user_addresses.filter(selected=True).first()
 
     class Meta:
         model = Order
