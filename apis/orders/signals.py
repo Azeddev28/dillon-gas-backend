@@ -56,6 +56,9 @@ def order_placement_tracking(sender, instance, **kwargs):
     template_name = 'email_templates/admin_emails/order_placement_email.html'
 
     receipient_emails = User.objects.filter(email_support=True).values_list('email', flat=True)
+    if not receipient_emails:
+        return
+
     try:
         email_service = EmailService(
             'Order Placement',
