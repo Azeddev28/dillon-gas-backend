@@ -34,6 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     last_name = models.CharField(max_length=40, null=True, blank=True)
     role = models.CharField(max_length=80, choices=ROLES, null=True, blank=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    email_support = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -64,3 +65,12 @@ class CustomerAddress(BaseModel):
     note_to_rider = models.TextField(null=True, blank=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     selected = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.house_no:
+            return f"{self.house_no} {self.street_address} {self.city} {self.state}"
+
+        if self.apartment_no:
+            return f"{self.apartment_no} {self.street_address} {self.city} {self.state}"
+
+        return f"{self.city} {self.state}"

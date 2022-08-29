@@ -21,7 +21,7 @@ class UserAdmin(BaseUserAdmin):
             'email', 'password', 'date_joined', 'last_login', 'is_staff', 'is_superuser')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'role', 'phone_number')}),
         ('Groups', {'fields': ('groups',)}),
-        ('Permissions', {'fields': ('user_permissions', 'is_active')}),
+        ('Permissions', {'fields': ('user_permissions', 'is_active', 'email_support')}),
     )
     add_fieldsets = (
         (('Credentials'), {'classes': ('wide',), 'fields': (
