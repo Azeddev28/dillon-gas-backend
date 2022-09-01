@@ -26,6 +26,7 @@ from apis.ratings import urls as rating_urls
 from apis.orders import urls as order_urls
 from apis.transactions import urls as transaction_urls
 from apis.wallets import urls as wallet_urls
+from apis.delivery_management import urls as delivery_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,6 +37,7 @@ urlpatterns = [
     path('orders/', include(order_urls)),
     path('transactions/', include(transaction_urls)),
     path('wallets/', include(wallet_urls)),
+    path('delivery/', include(delivery_urls))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

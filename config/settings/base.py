@@ -44,7 +44,7 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites'
+    'django.contrib.sites',
 ]
 
 PROJECT_APPS = [
@@ -57,10 +57,12 @@ PROJECT_APPS = [
     'apis.promotions',
     'apis.orders',
     'apis.ratings',
-    'apis.wallets'
+    'apis.wallets',
+    'apis.delivery_management'
 ]
 
 THIRD_PARTY_APPS = [
+    'cities_light',
     'rest_framework',
     'corsheaders',
     'phonenumber_field',
@@ -192,3 +194,6 @@ FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATION = env("FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATI
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=355)
 }
+
+# DJANGO CITIES
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['NG']
