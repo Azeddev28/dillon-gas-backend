@@ -11,3 +11,14 @@ class DeliveryInfo(BaseModel):
     state = models.ForeignKey(Region, related_name='state_delivery_info', on_delete=models.SET_NULL, null=True, blank=True)
     min_delivery_time = models.CharField(max_length=30)
     max_delivery_time = models.CharField(max_length=30)
+
+
+City.add_to_class(
+    'delivery_enabled',
+    models.BooleanField(default=False),
+)
+
+Region.add_to_class(
+    'delivery_enabled',
+    models.BooleanField(default=False),
+)
