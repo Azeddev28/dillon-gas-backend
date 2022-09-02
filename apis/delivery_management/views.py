@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework.mixins import RetrieveModelMixin
+from rest_framework.mixins import RetrieveModelMixin, ListModelMixin
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
@@ -30,11 +30,16 @@ class DeliveryInfoRetreieveView(RetrieveModelMixin, GenericAPIView):
         return self.retrieve(request, args, kwargs)
 
 
-class CityListView(ListAPIView):
+class CityListView(ListModelMixin, GenericAPIView):
     serializer_class = CitySerializer
     permission_classes = [IsAuthenticated, ]
-    queryset = City.objects.filter(delivery_enabled=True)
 
+    def get_queryset(self):
+        region = self.request.data.get('region')
+        return City.objects.filter(region__name=region, delivery_enabled=True)
+
+    def post(self, request, *args, **kwargs):
+        return self.list(request, args, kwargs)
 
 class RegionListView(ListAPIView):
     serializer_class = RegionSerializer
