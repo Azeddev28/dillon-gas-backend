@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apis.users.views.authentication import LogoutView
-from apis.users.views.customer_address import CustomerAddressModelViewset
+from apis.users.views.customer_address import CustomerAddressModelViewset, CustomerSelectedAddressRetrieveAPIView
 from apis.users.views.password import ResetPasswordAPIView
 from apis.users.views.registraion import RegisterUserAPIView
 from apis.users.views.user_details import CustomerDetailsRetrieveAPIView
@@ -17,3 +17,4 @@ email_verification_view = EmailVerificationAPIView.as_view()
 reset_password_view = ResetPasswordAPIView.as_view()
 customer_details_view = CustomerDetailsRetrieveAPIView.as_view()
 customer_address_viewset = CustomerAddressModelViewset
+current_customer_address = CustomerSelectedAddressRetrieveAPIView.as_view()
