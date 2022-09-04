@@ -41,6 +41,7 @@ class CityListView(ListModelMixin, GenericAPIView):
     def post(self, request, *args, **kwargs):
         return self.list(request, args, kwargs)
 
+
 class RegionListView(ListAPIView):
     serializer_class = RegionSerializer
     permission_classes = [IsAuthenticated, ]
