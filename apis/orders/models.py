@@ -28,8 +28,6 @@ class Order(BaseModel):
     discount_type = models.CharField(null=True, blank=True, choices=DISCOUNT_TYPE_CHOICES, max_length=30)
     tax = models.FloatField(null=True, blank=True)
     payment_method = models.IntegerField(null=True, blank=True, choices=PaymentMethods.CHOICES, default=None)
-    pickup_datetime = models.DateTimeField(null=True, blank=True)
-    delivery_time = models.DateTimeField(null=True, blank=True)
     transaction = models.OneToOneField(Transaction, on_delete=models.DO_NOTHING, related_name='order', null=True, blank=True)
 
     def __str__(self):

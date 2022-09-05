@@ -1,8 +1,13 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 from cities_light.models import City, Region
 
 from apis.base_models import BaseModel
+from apis.base_models import BaseModel
+from apis.orders.models import Order
+
+User = get_user_model()
 
 
 class DeliveryInfo(BaseModel):
@@ -22,3 +27,13 @@ Region.add_to_class(
     'delivery_enabled',
     models.BooleanField(default=False),
 )
+
+
+class OrderDelivery(BaseModel):
+    delivery_agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='agent_orders')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_delivery')
+    pickup_datetime = models.DateTimeField(null=True, blank=True)
+    delivery_datetime = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Order Deliveries'

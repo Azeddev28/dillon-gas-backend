@@ -2,12 +2,15 @@ from copy import copy
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
+from django.contrib.auth import get_user_model
 
 from cities_light.models import City, Region
 from cities_light.abstract_models import to_search
-from apis.delivery_management.forms import DGCityForm, DGRegionForm
 
-from apis.delivery_management.models import DeliveryInfo
+from apis.delivery_management.forms import DGCityForm, DGRegionForm
+from apis.delivery_management.models import DeliveryInfo, OrderDelivery
+
+User = get_user_model()
 
 
 class RegionAdmin(admin.ModelAdmin):
@@ -71,6 +74,8 @@ class CityAdmin(admin.ModelAdmin):
 
 
 class DeliveryInfoAdmin(admin.ModelAdmin):
+    list_display = ['city', 'state', 'delivery_cost', 'min_delivery_time', 'max_delivery_time']
+
     class Meta:
         model = DeliveryInfo
 
@@ -81,8 +86,20 @@ class DeliveryInfoAdmin(admin.ModelAdmin):
         return form
 
 
+class OrderDeliveryAdmin(admin.ModelAdmin):
+    list_display = ['order', 'delivery_agent', 'pickup_datetime', 'delivery_datetime']
+
+    class Meta:
+        model = OrderDelivery
+
+    def get_form(self, request, obj = ..., change: bool = ..., **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        form.base_fields['delivery_agent'] = forms.ModelChoiceField(User.objects.filter(role='delivery_agent'))
+        return form
+
 admin.site.unregister(City)
 admin.site.register(City, CityAdmin)
 admin.site.unregister(Region)
 admin.site.register(Region, RegionAdmin)
 admin.site.register(DeliveryInfo, DeliveryInfoAdmin)
+admin.site.register(OrderDelivery, OrderDeliveryAdmin)

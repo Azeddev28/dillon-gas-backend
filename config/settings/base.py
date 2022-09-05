@@ -45,12 +45,12 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'cities_light',
 ]
 
 PROJECT_APPS = [
     'apis.users',
     'apis.transactions',
-    'apis.deliveries',
     'apis.payments',
     'apis.stations',
     'apis.inventory',
@@ -62,7 +62,6 @@ PROJECT_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'cities_light',
     'rest_framework',
     'corsheaders',
     'phonenumber_field',

@@ -7,5 +7,5 @@ class StationInventoryItemAdmin(admin.ModelAdmin):
     class Meta:
         model = StationInventoryItem
 
-admin.site.register(Station)
+# admin.site.register(Station)
 admin.site.register(StationInventoryItem, StationInventoryItemAdmin)
