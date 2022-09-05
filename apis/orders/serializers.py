@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction as db_transaction
 
 from rest_framework import serializers
+from apis.delivery_management.models import DeliveryInfo
 
 from apis.orders.choices import OrderStatus
 from apis.orders.serializer_fields.payment_status import PaymentStatusField
@@ -60,6 +61,24 @@ class OrderSerializer(serializers.ModelSerializer):
             user=user
         )
         return transaction
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        customer = attrs.get('customer')
+        customer_address = customer.selected_address
+        if not customer_address:
+            raise serializers.ValidationError('Customer has not selected address')
+
+        delivery_info = DeliveryInfo.objects.filter(
+            city__name__icontains=customer_address.city,
+            state__name__icontains=customer_address.state
+        ).first()
+
+        if not delivery_info:
+            raise serializers.ValidationError('Delivery for this area not supported')
+
+        attrs['delivery_charges'] = delivery_info.delivery_cost
+        return attrs
 
     @db_transaction.atomic
     def create(self, validated_data):

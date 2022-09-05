@@ -45,6 +45,14 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
         return self.email
 
     @property
+    def selected_address(self):
+        customer_selected_address = self.user_addresses.filter(selected=True).first()
+        if not customer_selected_address:
+            return
+
+        return customer_selected_address
+
+    @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 

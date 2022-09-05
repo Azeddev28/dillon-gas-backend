@@ -8,4 +8,4 @@ class StationInventoryItemAdmin(admin.ModelAdmin):
         model = StationInventoryItem
 
 # admin.site.register(Station)
-admin.site.register(StationInventoryItem, StationInventoryItemAdmin)
+# admin.site.register(StationInventoryItem, StationInventoryItemAdmin)
