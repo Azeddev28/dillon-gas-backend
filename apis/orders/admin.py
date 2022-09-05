@@ -2,7 +2,7 @@ from django.contrib import admin
 from apis.delivery_management.models import OrderDelivery
 
 from apis.orders.models import Order, OrderItem
-from apis.orders.utils.admin_restricted_field_choices import NON_EDITABLE_ORDER_STATUS
+from apis.orders.utils.admin_restricted_field_choices import NON_EDITABLE_ORDER_STATUS, NON_EDITABLE_PAYMENT_STATUS
 
 
 class OrderItemInline(admin.StackedInline):
@@ -41,10 +41,12 @@ class OrderAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj):
         fields = super().get_readonly_fields(request, obj)
-        if obj and obj.order_status not in NON_EDITABLE_ORDER_STATUS:
-            return fields
+        if obj and obj.order_status in NON_EDITABLE_ORDER_STATUS:
+            fields.append('order_status')
 
-        fields.append('order_status')
+        if obj and obj.payment_status in NON_EDITABLE_PAYMENT_STATUS:
+            fields.append('payment_status')
+
         return set(fields)
 
 

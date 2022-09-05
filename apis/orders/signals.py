@@ -4,10 +4,11 @@ from django.db.models.signals import pre_save, post_save
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 
-from apis.orders.choices import OrderStatus
+from apis.orders.choices import OrderStatus, PaymentStatus
 from apis.orders.models import Order
 from apis.services.email_service import EmailService
 from apis.orders.mappings import order_tracking_template_mapping
+from apis.transactions.choices import TransactionStatus
 
 User = get_user_model()
 
@@ -23,6 +24,12 @@ def order_tracking(sender, instance, **kwargs):
         return
 
     prev_order_status = Order.objects.get(id=instance.id).order_status
+
+    transaction = instance.transaction
+    if transaction.status == TransactionStatus.PENDING and instance.payment_status == PaymentStatus.COMPLETED:
+        transaction.status = TransactionStatus.COMPLETED
+        transaction.save()
+
     if prev_order_status == instance.order_status:
         return
 
@@ -50,7 +57,7 @@ def order_placement_tracking(sender, instance, **kwargs):
     if instance.order_status == OrderStatus.PENDING:
         return
 
-    if instance != OrderStatus.PROCESSING:
+    if instance.order_status != OrderStatus.PROCESSING:
         return
 
     template_name = 'email_templates/admin_emails/order_placement_email.html'
@@ -66,6 +73,8 @@ def order_placement_tracking(sender, instance, **kwargs):
             template_name,
             {
                 'order_edit_url': f"{Site.objects.get_current().domain}{reverse('admin:orders_order_change', args=(instance.id,))}",
+                'order': instance,
+                'customer_address': instance.customer.selected_address
             }
         )
         email_service.start()
