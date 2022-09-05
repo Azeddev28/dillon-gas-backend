@@ -16,7 +16,7 @@
                 <p style='font-size: 0.75rem;
                     line-height: 1rem; 
                     font-weight: 400; 
-                    color: #000000;'>₦{{order_item.item.price}}</p>
+                    color: #000000;'>₦{{order_item.item.price|floatformat:2 }}</p>
                 </p>
               </td>
             </tr>
@@ -43,7 +43,7 @@
                 <p style='font-size: 0.875rem;
                   line-height: 1.25rem; 
                   font-weight: 400; 
-                  color: #323232;'>₦{{order.base_price}}</p>
+                  color: #323232;'>₦{{order.base_price|floatformat:2 }}</p>
               </td>
             </tr>
             <tr colspan="12">
@@ -58,7 +58,7 @@
                 <p style='font-size: 0.875rem;
                   line-height: 1.25rem; 
                   font-weight: 400; 
-                  color: #323232;'>₦0</p>
+                  color: #323232;'>₦{{order.delivery_charges|floatformat:2 }}</p>
               </td>
             </tr>
             <tr>
@@ -80,7 +80,7 @@
                 <p style='font-size: 0.875rem;
                   line-height: 1.25rem; 
                   font-weight: 400; 
-                  color: #323232;'>₦{{order.total_price}}</p>
+                  color: #323232;'>₦{{order.total_price|floatformat:2 }}</p>
               </td>
             </tr>
       </table>
