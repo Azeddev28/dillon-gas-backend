@@ -4,3 +4,10 @@ order_tracking_template_mapping = {
     'Completed': 'email_templates/order_completion_confirmation.html',
     'Cancelled': 'email_templates/order_completion_confirmation.html',
 }
+
+order_subject_mapping = {
+    'Processing': 'Order Confirmation',
+    'Dispatched': 'Order Dispatch Confirmation',
+    'Completed': 'Order Completion',
+    'Cancelled': 'Order Cancellation',
+}

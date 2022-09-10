@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 from apis.orders.choices import OrderStatus, PaymentStatus
 from apis.orders.models import Order
 from apis.services.email_service import EmailService
-from apis.orders.mappings import order_tracking_template_mapping
+from apis.orders.mappings import order_tracking_template_mapping, order_subject_mapping
 from apis.transactions.choices import TransactionStatus
 
 User = get_user_model()
@@ -20,7 +20,7 @@ User = get_user_model()
 
 @receiver(pre_save, sender=Order)
 def order_tracking(sender, instance, **kwargs):
-    if instance.order_status == OrderStatus.PENDING:
+    if instance.order_status == OrderStatus.PENDING and instance.payment_status != PaymentStatus.COMPLETED:
         return
 
     prev_order_status = Order.objects.get(id=instance.id).order_status
@@ -37,9 +37,10 @@ def order_tracking(sender, instance, **kwargs):
     if not template_name:
         return
 
+    email_subject = order_subject_mapping.get(instance.get_order_status_display())
     try:
         email_service = EmailService(
-            'Order Tracking',
+            email_subject,
             [instance.customer.email, ],
             template_name,
             {
