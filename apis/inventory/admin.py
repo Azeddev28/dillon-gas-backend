@@ -14,8 +14,11 @@ class StationInventoryItemInline(admin.StackedInline):
 
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ['uuid', 'name']
+    list_display = ['uuid', 'name', 'quantity']
     inlines = [StationInventoryItemInline,]
+
+    def quantity(self, obj):
+        return obj.inventory.first().quantity
 
     class Meta:
         model = Item
