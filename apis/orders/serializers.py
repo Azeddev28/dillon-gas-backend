@@ -2,9 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db import transaction as db_transaction
 
 from rest_framework import serializers
-from apis.delivery_management.models import DeliveryInfo
 
-from apis.orders.choices import OrderStatus
+from apis.delivery_management.models import DeliveryInfo
 from apis.orders.utils.validation_messages import OUT_OF_STOCK_MESSAGE
 from apis.orders.serializer_fields.payment_status import PaymentStatusField
 from apis.orders.serializer_fields.order_status import OrderStatusField
@@ -12,6 +11,7 @@ from apis.orders.serializer_fields.payment_method import PaymentMethodField
 from apis.stations.models import StationInventoryItem
 from apis.orders.models import Order, OrderItem
 from apis.transactions.models import Transaction
+from apis.orders.choices import OrderStatus
 
 User = get_user_model()
 
@@ -47,16 +47,6 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         exclude = ['id', 'is_active', 'station']
 
-    def validate(self, attrs):
-        attrs = super().validate(attrs)
-        order_items = attrs['order_items']
-        out_of_stock_items = OrderItem.check_inventory(order_items)
-        if out_of_stock_items:
-            raise serializers.ValidationError(detail={
-                'message': OUT_OF_STOCK_MESSAGE,
-                'out_of_stock_items': [out_of_stock_items]
-            })
-        return attrs
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['transaction'] = response.get('transaction').get('reference')
@@ -76,20 +66,31 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
+        order_items = attrs.get('order_items')
+        if order_items:
+            out_of_stock_items = OrderItem.check_inventory(order_items)
+            if out_of_stock_items:
+                raise serializers.ValidationError(detail={
+                    'message': OUT_OF_STOCK_MESSAGE,
+                    'out_of_stock_items': [out_of_stock_items]
+                })
+
         customer = attrs.get('customer')
-        customer_address = customer.selected_address
-        if not customer_address:
-            raise serializers.ValidationError('Customer has not selected address')
+        if customer:
+            customer_address = customer.selected_address
+            if not customer_address:
+                raise serializers.ValidationError('Customer has not selected address')
 
-        delivery_info = DeliveryInfo.objects.filter(
-            city__name__icontains=customer_address.city,
-            state__name__icontains=customer_address.state
-        ).first()
+            delivery_info = DeliveryInfo.objects.filter(
+                city__name__icontains=customer_address.city,
+                state__name__icontains=customer_address.state
+            ).first()
 
-        if not delivery_info:
-            raise serializers.ValidationError('Delivery for this area not supported')
+            if not delivery_info:
+                raise serializers.ValidationError('Delivery for this area not supported')
 
-        attrs['delivery_charges'] = delivery_info.delivery_cost
+            attrs['delivery_charges'] = delivery_info.delivery_cost
+
         return attrs
 
     @db_transaction.atomic
