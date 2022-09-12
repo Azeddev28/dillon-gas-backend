@@ -5,6 +5,7 @@ from rest_framework import serializers
 from apis.delivery_management.models import DeliveryInfo
 
 from apis.orders.choices import OrderStatus
+from apis.orders.utils.validation_messages import OUT_OF_STOCK_MESSAGE
 from apis.orders.serializer_fields.payment_status import PaymentStatusField
 from apis.orders.serializer_fields.order_status import OrderStatusField
 from apis.orders.serializer_fields.payment_method import PaymentMethodField
@@ -21,6 +22,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = ['item', 'uuid', 'quantity']
+        extra_kwargs = {'quantity': {'required': True}}
 
 
 class TransactionBriefInfoSerializer(serializers.ModelSerializer):
@@ -45,6 +47,16 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         exclude = ['id', 'is_active', 'station']
 
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        order_items = attrs['order_items']
+        out_of_stock_items = OrderItem.check_inventory(order_items)
+        if out_of_stock_items:
+            raise serializers.ValidationError(detail={
+                'message': OUT_OF_STOCK_MESSAGE,
+                'out_of_stock_items': [out_of_stock_items]
+            })
+        return attrs
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['transaction'] = response.get('transaction').get('reference')
@@ -90,5 +102,9 @@ class OrderSerializer(serializers.ModelSerializer):
         order.total_price = base_price + order.delivery_charges
         order.order_status = OrderStatus.PROCESSING
         order.transaction = self._create_transaction(order.total_price, validated_data.get('customer'))
+        OrderItem.deduct_inventory(order_items)
         order.save()
         return order
+
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
