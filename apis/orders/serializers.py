@@ -104,6 +104,7 @@ class OrderSerializer(serializers.ModelSerializer):
         order.transaction = self._create_transaction(order.total_price, validated_data.get('customer'))
         OrderItem.deduct_inventory(order_items)
         order.save()
+        return order
 
     def update(self, instance, validated_data):
         return super().update(instance, validated_data)
