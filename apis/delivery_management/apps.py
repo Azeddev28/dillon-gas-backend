@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class DeliveriesConfig(AppConfig):
+class DeliveryManagementConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apis.deliveries'
+    name = 'apis.delivery_management'

@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div>
+    <div style="padding-top: 2rem;
+          padding-bottom: 2rem; 
+          padding-left: 2rem;
+          padding-right: 2rem; 
+          background: #F8F8FC;">
+      {% include 'email_templates/email_header.html' %}
+      <div class="mb-4">
+        <h4 style='margin-bottom: 1rem; 
+          font-size: 1.25rem;
+          line-height: 1.75rem; 
+          font-weight: 700; 
+          color: #121A26;
+          '>
+          Hi {{order.customer.first_name}}
+        </h4>
+        <p style="font-size: 0.875rem;
+          line-height: 1.25rem; 
+          font-weight: 400; 
+          color: #384860;
+          ">
+          Your Order with order number {{order.order_number}} has been cancelled
+        </p>
+      </div>
+      <p style="margin-bottom: 1rem; 
+      font-size: 0.875rem;
+      line-height: 1.25rem; 
+      color: #384860;
+      ">Thank you.</p>
+    </div>
+    {% include 'email_templates/email_footer.html' %}
+  </div>
+</body>
+
+</html>

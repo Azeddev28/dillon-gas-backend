@@ -44,19 +44,21 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'cities_light',
 ]
 
 PROJECT_APPS = [
     'apis.users',
     'apis.transactions',
-    'apis.deliveries',
     'apis.payments',
     'apis.stations',
     'apis.inventory',
     'apis.promotions',
     'apis.orders',
     'apis.ratings',
-    'apis.wallets'
+    'apis.wallets',
+    'apis.delivery_management'
 ]
 
 THIRD_PARTY_APPS = [
@@ -161,6 +163,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, ''),
 )
 
+# SITE DOMAIN SETTINGS
+SITE_ID = 1
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -188,3 +193,6 @@ FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATION = env("FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATI
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=355)
 }
+
+# DJANGO CITIES
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['NG']
