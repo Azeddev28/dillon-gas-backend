@@ -11,7 +11,7 @@ class EmailService(threading.Thread):
     def __init__(self, subject, recipients, html_template, template_context):
         threading.Thread.__init__(self)
         self.subject = subject
-        self.email_from = settings.EMAIL_HOST_USER
+        self.email_from = settings.DEFAULT_FROM_EMAIL
         self.recipients = recipients
         self.html_template = render_to_string(html_template, template_context)
 
@@ -20,7 +20,8 @@ class EmailService(threading.Thread):
                                   '',
                                   self.email_from,
                                   self.recipients,
-                                  html_message=self.html_template)
+                                  html_message=self.html_template,
+                                  fail_silently=False)
         return is_email_sent
 
     def run(self):
