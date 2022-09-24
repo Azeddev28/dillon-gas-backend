@@ -52,9 +52,22 @@ class OrderSerializer(serializers.ModelSerializer):
         response['transaction'] = response.get('transaction').get('reference')
         return response
 
-    def _create_order_items(self, order_items_data, order):
-        order_items = [OrderItem(**order_item_data, order=order) for order_item_data in order_items_data]
-        order_items = OrderItem.objects.bulk_create(order_items)
+    def _create_or_update_order_items(self, order_items_data, order):
+        order_items = []
+        for order_item_data in order_items_data:
+            try:
+                item = order_item_data.pop('item')
+                order_item, created = OrderItem.objects.update_or_create(
+                    item=item,
+                    order=order,
+                    defaults={
+                        **order_item_data
+                    }
+                )
+                order_items.append(order_item)
+            except Exception as e:
+                pass
+
         return order_items
 
     def _create_transaction(self, amount, user):
@@ -97,7 +110,7 @@ class OrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         order_items_data = validated_data.pop('order_items')
         order = Order.objects.create(**validated_data)
-        order_items = self._create_order_items(order_items_data, order)
+        order_items = self._create_or_update_order_items(order_items_data, order)
         base_price = sum([order_item.item.price for order_item in order_items])
         order.base_price = base_price
         order.total_price = base_price + order.delivery_charges
@@ -108,4 +121,8 @@ class OrderSerializer(serializers.ModelSerializer):
         return order
 
     def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
+        order_items_data = validated_data.pop('order_items', None)
+        order = super().update(instance, validated_data)
+        if order_items_data:
+            order_items = self._create_or_update_order_items(order_items_data, order)
+        return order
