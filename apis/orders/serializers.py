@@ -125,4 +125,8 @@ class OrderSerializer(serializers.ModelSerializer):
         order = super().update(instance, validated_data)
         if order_items_data:
             order_items = self._create_or_update_order_items(order_items_data, order)
+            base_price = sum([order_item.item.price for order_item in order_items])
+            order.base_price = base_price
+            order.total_price = base_price + order.delivery_charges
+            order.save()
         return order
