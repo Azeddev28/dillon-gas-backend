@@ -111,7 +111,7 @@ class OrderSerializer(serializers.ModelSerializer):
         order_items_data = validated_data.pop('order_items')
         order = Order.objects.create(**validated_data)
         order_items = self._create_or_update_order_items(order_items_data, order)
-        base_price = sum([order_item.item.price for order_item in order_items])
+        base_price = sum([(order_item.item.price * order_item.quantity) for order_item in order_items])
         order.base_price = base_price
         order.total_price = base_price + order.delivery_charges
         order.order_status = OrderStatus.PROCESSING
@@ -125,7 +125,7 @@ class OrderSerializer(serializers.ModelSerializer):
         order = super().update(instance, validated_data)
         if order_items_data:
             order_items = self._create_or_update_order_items(order_items_data, order)
-            base_price = sum([order_item.item.price for order_item in order_items])
+            base_price = sum([(order_item.item.price * order_item.quantity) for order_item in order_items])
             order.base_price = base_price
             order.total_price = base_price + order.delivery_charges
             order.save()
