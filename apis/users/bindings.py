@@ -1,4 +1,5 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
+from apis.users.views.account_deletion import UserDeletionAPIView
 
 from apis.users.views.authentication import LogoutView
 from apis.users.views.customer_address import CustomerAddressModelViewset, CustomerSelectedAddressRetrieveAPIView
@@ -18,3 +19,4 @@ reset_password_view = ResetPasswordAPIView.as_view()
 customer_details_view = CustomerDetailsRetrieveAPIView.as_view()
 customer_address_viewset = CustomerAddressModelViewset
 current_customer_address = CustomerSelectedAddressRetrieveAPIView.as_view()
+user_account_deletion = UserDeletionAPIView.as_view()

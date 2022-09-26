@@ -7,7 +7,7 @@ from apis.wallets.models import Wallet
 User = get_user_model()
 
 
-@receiver(post_save, sender=User)
-def create_wallet_on_registration(sender, instance, created, **kwargs):
-    if created and not instance.is_superuser:
-        Wallet.objects.create(user=instance)
+# @receiver(post_save, sender=User)
+# def create_wallet_on_registration(sender, instance, created, **kwargs):
+#     if created and not instance.is_superuser:
+#         Wallet.objects.create(user=instance)
