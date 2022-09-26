@@ -13,7 +13,7 @@
     color: #384860;
     ">
       For: <span style="font-weight: 700;">{{order.customer.first_name}} {{order.customer.last_name}}</span><br />
-      Address: {{customer_address.street_address}}, {{customer_address.city}}<br />
+      Address:{{customer_address.house_no}}, {% if customer_address.apartment_no %}{{customer_address.apartment_no}},{% endif %} {{customer_address.street_address}}<br />
       {{customer_address.city}}, {{customer_address.state}}, Nigeria.
     </p>
 </div>
