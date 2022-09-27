@@ -7,6 +7,9 @@ User = get_user_model()
 
 
 class UserDeletionAPIView(DestroyAPIView):
-    lookup_field = 'uuid'
     permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
+
+    def get_object(self):
+        user = self.request.user
+        return user

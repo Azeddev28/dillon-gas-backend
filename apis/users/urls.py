@@ -22,7 +22,7 @@ urlpatterns = [
     path('resend-email/', resend_email_view, name='resend-email'),
     path('reset-password/', reset_password_view, name='reset-password'),
 
-    path('delete-account/<uuid:uuid>/', user_account_deletion, name='delete-account'),
+    path('delete-account/', user_account_deletion, name='delete-account'),
 
     path('user-details/', customer_details_view, name='user-details'),
     path('current-customer-address/', current_customer_address, name='current-address'),
