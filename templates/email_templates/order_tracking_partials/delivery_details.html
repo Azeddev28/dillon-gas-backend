@@ -14,7 +14,7 @@
     ">
       For: <span style="font-weight: 700;">{{order.customer.first_name}} {{order.customer.last_name}}</span><br />
       House No: <span style="font-weight: 700;">{{customer_address.house_no}}</span><br />
-      {% if customer_address.apartment_no %}<span style="font-weight: 700;">Apart No.: {% apartment_no %}</span><br />{% endif %}
+      {% if customer_address.apartment_no %}Apart No.: <span style="font-weight: 700;">{{customer_address.apartment_no}}</span><br />{% endif %}
       Street Address: <span style="font-weight: 700;">{{customer_address.street_address}}</span><br />
       City: <span style="font-weight: 700;">{{customer_address.city}}</span><br />
       State: <span style="font-weight: 700;">{{customer_address.state}}</span><br />
