@@ -8,6 +8,6 @@ from apis.inventory.serializers.category import CategorySerializer
 
 class CategoryListAPIView(ListAPIView):
     serializer_class = CategorySerializer
-    queryset = Category.objects.all().order_by(
+    queryset = Category.objects.filter(is_active=True).order_by(
         Case(When(name="All", then=0), default=1)
     )
