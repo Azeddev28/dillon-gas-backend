@@ -130,3 +130,10 @@ class OrderSerializer(serializers.ModelSerializer):
             order.total_price = base_price + order.delivery_charges
             order.save()
         return order
+
+
+class OrderStatusSerializer(serializers.ModelSerializer):
+    order_status = OrderStatusField(source='*', required=False)
+    class Meta:
+        model = Order
+        fields = ['order_status',]
