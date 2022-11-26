@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import environ
+from datetime import timedelta
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -42,18 +44,21 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'cities_light',
 ]
 
 PROJECT_APPS = [
     'apis.users',
     'apis.transactions',
-    'apis.deliveries',
     'apis.payments',
     'apis.stations',
     'apis.inventory',
     'apis.promotions',
     'apis.orders',
-    'apis.ratings'
+    'apis.ratings',
+    'apis.wallets',
+    'apis.delivery_management'
 ]
 
 THIRD_PARTY_APPS = [
@@ -78,12 +83,15 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
+
 ROOT_URLCONF = 'config.urls'
+
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,13 +108,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.routing.application'
 
 
+
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             'hosts': [('localhost', 6379)],
         },
-        'ROUTING': 'example_channels.routing.channel_routing',
     }
 }
 
@@ -114,17 +122,14 @@ CHANNEL_LAYERS = {
 REDIS_CACHE_LOCATION = env('REDIS_CACHE_LOCATION')
 CACHE_DEFAULT_TIMEOUT = 24 * 60 * 60  # 24 hours
 CACHES = {
-    'default': {
-        'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': REDIS_CACHE_LOCATION,
-        'TIMEOUT': CACHE_DEFAULT_TIMEOUT,
-        'KEY_PREFIX': 'SPP_BACKEND',
-        'OPTIONS': {
-            'DB': 1,
-            'SOCKET_TIMEOUT': 5,
-            'SOCKET_CONNECT_TIMEOUT': 5,
-        },
-    },
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://localhost:6379",
+        "TIMEOUT": CACHE_DEFAULT_TIMEOUT,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
 AUTH_USER_MODEL = 'users.User'
 
@@ -179,7 +184,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, ''),
 )
 
-
+# SITE DOMAIN SETTINGS
+SITE_ID = 1
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -189,8 +195,26 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # EMAIL SETUP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_USE_TLS = True
 EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+# FLUTTERWAVE SETUP
+FLUTTERWAVE_BASE_URL = env("FLUTTERWAVE_BASE_URL")
+FLUTTERWAVE_SECRET_KEY = env("FLUTTERWAVE_SECRET_KEY")
+FLUTTERWAVE_ADMIN_EMAIL = env("FLUTTERWAVE_ADMIN_EMAIL")
+BVN_ACCOUNT_NUMBER = env("BVN_ACCOUNT_NUMBER")
+FLUTTERWAVE_ADMIN_PHONE_NUMBER = env("FLUTTERWAVE_ADMIN_PHONE_NUMBER")
+FLUTTERWAVE_ADMIN_FIRST_NAME = env("FLUTTERWAVE_ADMIN_FIRST_NAME")
+FLUTTERWAVE_ADMIN_LAST_NAME = env("FLUTTERWAVE_ADMIN_LAST_NAME")
+FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATION = env("FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATION")
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=355)
+}
+
+# DJANGO CITIES
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['NG']
