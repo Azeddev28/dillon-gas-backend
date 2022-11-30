@@ -13,7 +13,7 @@ class CustomerAddressModelViewset(ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
-        return CustomerAddress.objects.filter(user=user).order_by('-updated_at')
+        return CustomerAddress.objects.filter(user=user).order_by('-created_at')
 
 
 class CustomerSelectedAddressRetrieveAPIView(RetrieveAPIView):
