@@ -1,9 +1,9 @@
 from config.settings.base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['161.35.189.93', ]
+ALLOWED_HOSTS = ['167.172.225.150', ]
 
 # Database Credentials
 
