@@ -26,7 +26,7 @@ import os
 
 # setup_environment()
 # django.setup()
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.staging')
 django_asgi_app = get_asgi_application()
 
 from channels.routing import ProtocolTypeRouter, URLRouter
@@ -43,5 +43,3 @@ application = ProtocolTypeRouter({
         )
     )
 })
-
-
