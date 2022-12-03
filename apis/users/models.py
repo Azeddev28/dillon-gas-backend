@@ -34,6 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     last_name = models.CharField(max_length=40, null=True, blank=True)
     role = models.CharField(max_length=80, choices=ROLES, null=True, blank=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    email_support = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -42,6 +43,14 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     def __str__(self):
         return self.email
+
+    @property
+    def selected_address(self):
+        customer_selected_address = self.user_addresses.filter(selected=True).first()
+        if not customer_selected_address:
+            return
+
+        return customer_selected_address
 
     @property
     def full_name(self):
@@ -55,9 +64,21 @@ class UserDevice(BaseModel):
 
 class CustomerAddress(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_addresses')
+    house_no = models.CharField(max_length=50, null=True, blank=True)
+    apartment_no = models.CharField(max_length=50, null=True, blank=True)
     street_address = models.TextField()
-    building = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100, default=None, null=True, blank=True)
     label = models.CharField(max_length=30, null=True, blank=True)
     note_to_rider = models.TextField(null=True, blank=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    selected = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.house_no:
+            return f"{self.house_no} {self.street_address} {self.city} {self.state}"
+
+        if self.apartment_no:
+            return f"{self.apartment_no} {self.street_address} {self.city} {self.state}"
+
+        return f"{self.city} {self.state}"

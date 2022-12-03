@@ -37,5 +37,11 @@ class StationInventoryItem(BaseModel):
     def name(self):
         return self.item.name
 
+    def out_of_stock(self, quantity):
+        if self.quantity < quantity:
+            return True
+
+        return False
+
     def __str__(self):
         return self.name

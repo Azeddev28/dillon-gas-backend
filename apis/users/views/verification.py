@@ -6,38 +6,42 @@ from rest_framework.exceptions import ParseError
 
 from apis.base_decorators import catch_request_exception
 from apis.base_views import BaseAPIView
+from apis.services.email_service import EmailService
 from apis.users.serializers.verification import EmailVerificationSerializer, ResendEmailSerializer
-from apis.users.services.email_verification import EmailVerificationService
 from apis.users.utils.messages import EMAIL_SENT_MESSAGE, EMAIL_VERIFICATION_MESSAGE
 from apis.users.views.registraion import RegisterUserAPIView
 
 User = get_user_model()
 
 
-@method_decorator(catch_request_exception, name='post')
+# @method_decorator(catch_request_exception, name='post')
 class ResendEmailAPIView(RegisterUserAPIView):
     serializer_class = ResendEmailSerializer
     success_message = EMAIL_SENT_MESSAGE
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(self.get_error_message(serializer))
+        serializer.is_valid(raise_exception=True)
+            # return Response(self.get_error_message(serializer))
 
         user = serializer.validated_data.get('user')
         verification_code = serializer.validated_data.pop('verification_code')
         self.save_session_params(user.email, verification_code)
-        email_service = EmailVerificationService(
-            recipient_email=user.email,
-            verification_code=verification_code
+        email_service = EmailService(
+            'Email Verification',
+            [user.email,],
+            'email_templates/verification.html',
+            {
+                'verification_code': verification_code
+            }
         )
-        email_service.send_email()
+        email_service.start()
         return Response({
             "message": self.success_message,
         })
 
 
-@method_decorator(catch_request_exception, name='post')
+# @method_decorator(catch_request_exception, name='post')
 class EmailVerificationAPIView(BaseAPIView):
     """View to verify user email against generated code"""
     serializer_class = EmailVerificationSerializer
@@ -59,8 +63,7 @@ class EmailVerificationAPIView(BaseAPIView):
     def post(self, request, *args, **kwargs):
         self.validate_session()
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(self.get_error_message(serializer))
+        serializer.is_valid(raise_exception=True)
 
         user = serializer.validated_data.get('user')
         self.clear_session_data()

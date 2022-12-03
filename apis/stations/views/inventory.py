@@ -1,7 +1,7 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView
-from apis.stations.models import StationInventoryItem
 
 from apis.stations.serializers.inventory import InventoryDetailSerializer, InventoryListSerializer
+from apis.stations.models import StationInventoryItem
 
 
 class InventoryListAPIView(ListAPIView):

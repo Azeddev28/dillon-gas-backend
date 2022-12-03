@@ -2,3 +2,8 @@ env
 *__pycache__*
 .env
 db.sqlite3
+static
+.DS_STORE
+venv
+dillon_gas.log
+dillon_gas_error.log
