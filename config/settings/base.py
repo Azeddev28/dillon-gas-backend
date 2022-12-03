@@ -65,8 +65,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'corsheaders',
     'phonenumber_field',
-    'storages',
-    'channels',
+    'storages'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -105,33 +104,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-ASGI_APPLICATION = 'config.asgi.application'
 
 
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('localhost', 6379)],
-        },
-    }
-}
-
-# Caching configuration
-REDIS_CACHE_LOCATION = env('REDIS_CACHE_LOCATION')
-CACHE_DEFAULT_TIMEOUT = 24 * 60 * 60  # 24 hours
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379",
-        "TIMEOUT": CACHE_DEFAULT_TIMEOUT,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
 AUTH_USER_MODEL = 'users.User'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
