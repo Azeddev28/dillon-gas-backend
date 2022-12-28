@@ -218,3 +218,65 @@ SIMPLE_JWT = {
 
 # DJANGO CITIES
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['NG']
+
+# Logging configuration
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} {levelname} {filename} {funcName} {lineno} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{asctime} {levelname} - {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'filters': ['require_debug_true'],
+            'formatter': 'simple',
+        },
+        'log_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'dillon_gas.log',
+            'maxBytes': 1024 * 1024 * 5,  # 5 mb
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'dillon_gas_error.log',
+            'maxBytes': 1024 * 1024 * 5,  # 5 mb
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['error_file', 'console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'daphne': {
+            'handlers': [
+                'console', 'error_file'
+            ],
+            'level': 'DEBUG'
+        },
+    },
+}

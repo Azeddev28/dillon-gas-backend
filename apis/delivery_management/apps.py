@@ -6,4 +6,4 @@ class DeliveryManagementConfig(AppConfig):
     name = 'apis.delivery_management'
 
     def ready(self):
-        from apis.orders import signals
+        from apis.delivery_management import signals
