@@ -8,5 +8,5 @@ from apis.notifications.services.send_notification_service import OrderAssignmen
 @receiver(post_save, sender=OrderDelivery)
 def order_assignment_to_agent(sender, instance, **kwargs):
     user_uuid = instance.order.customer.uuid
-    order_notification_service = OrderAssignmentNotificationService(user_uuid)
+    order_notification_service = OrderAssignmentNotificationService(user_uuid, instance.order)
     order_notification_service.send_order_assignment_notification()

@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
-from apis.users.models import CustomerAddress
+from apis.users.models import CustomerAddress, UserDevice
 
 User = get_user_model()
 
@@ -37,6 +37,13 @@ class CustomerAddressAdmin(admin.ModelAdmin):
     list_display = ['user', 'street_address', 'city', 'state', 'selected']
     class Meta:
         model = CustomerAddress
+
+
+class UserDeviceAdmin(admin.ModelAdmin):
+    list_display = ['user', 'device_id']
+    class Meta:
+        model = UserDevice
+
 
 admin.site.register(User, UserAdmin)
 admin.site.register(CustomerAddress, CustomerAddressAdmin)
