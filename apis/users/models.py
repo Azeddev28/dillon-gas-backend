@@ -82,3 +82,9 @@ class CustomerAddress(BaseModel):
             return f"{self.apartment_no} {self.street_address} {self.city} {self.state}"
 
         return f"{self.city} {self.state}"
+
+
+class DeliveryAgent(BaseModel):
+    longitutde = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='delivery_agent')
