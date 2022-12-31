@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
-from apis.users.models import CustomerAddress, UserDevice
+from apis.users.models import CustomerAddress, DeliveryAgent, UserDevice
 
 User = get_user_model()
 
@@ -47,3 +47,4 @@ class UserDeviceAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.register(CustomerAddress, CustomerAddressAdmin)
+admin.site.register(DeliveryAgent)
