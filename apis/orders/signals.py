@@ -1,8 +1,12 @@
+import time
 from django.urls import reverse
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
+from apis.delivery_management.models import OrderDelivery
+from apis.delivery_management.signals import find_closest_agent
+from apis.notifications.services.send_notification_service import OrderAssignmentNotificationService
 
 from apis.orders.choices import OrderStatus, PaymentStatus
 from apis.orders.models import Order
@@ -81,3 +85,22 @@ def order_placement_tracking(sender, instance, **kwargs):
         email_service.start()
     except Exception as e:
         pass
+
+
+@receiver(post_save, sender=Order)
+def order_placement_tracking(sender, instance, **kwargs):
+    user_uuid = instance.order.customer.uuid
+    order_notification_service = OrderAssignmentNotificationService(user_uuid, instance.order)
+    order_notification_service.send_order_assignment_notification()
+
+    print('Hello')
+    # Sleep for 5 minutes to get all delivery agent locations
+    time.sleep(300) # Number of seconds
+    print('Bye')
+
+    #find the closest agent
+    closest_agent = find_closest_agent()
+    OrderDelivery.objects.create(order=instance, delivery_agent=closest_agent)
+
+    #assign order to closest agent
+    
