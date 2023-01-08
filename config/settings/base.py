@@ -269,7 +269,7 @@ LOGGING = {
     'loggers': {
         'django.request': {
             'handlers': ['error_file', 'console'],
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'propagate': False,
         },
         'daphne': {

@@ -1,9 +1,9 @@
 from config.settings.base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['161.35.189.93', ]
+ALLOWED_HOSTS = ['167.172.225.150', ]
 
 # Database Credentials
 
@@ -36,11 +36,11 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 AWS_LOCATION = env('AWS_LOCATION')
 
-STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATICFILES_STORAGE = 'config.storages.StaticStorage'
+# STATICFILES_STORAGE = 'config.storages.StaticStorage'
 DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'

@@ -37,15 +37,14 @@ class NotificationConsumer(WebsocketConsumer):
     def broadcast_all_agents(self, event):
         data = event.get('data')
 
-        self.send(text_data=json.dumps({
-            'data': data
-        }))
+        self.send(text_data=json.dumps(data))
 
     def receive(self, text_data):
         import json
 
         text_data = json.loads(text_data)
         delivery_agent = self.scope.get('user').delivery_agent
-        delivery_agent.longitude = text_data.get('lat')
-        delivery_agent.latitude = text_data.get('long')
+        delivery_agent.latitude = text_data.get('lat')
+        delivery_agent.longitude = text_data.get('long')
+        delivery_agent.marked_location = True
         delivery_agent.save()

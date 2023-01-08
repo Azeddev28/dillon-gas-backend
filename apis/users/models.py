@@ -85,6 +85,8 @@ class CustomerAddress(BaseModel):
 
 
 class DeliveryAgent(BaseModel):
-    longitutde = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='delivery_agent')
+    marked_location = models.BooleanField(default=False)
+    status = models.BooleanField(default=False)

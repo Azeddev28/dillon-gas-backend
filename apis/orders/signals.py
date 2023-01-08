@@ -1,4 +1,3 @@
-import time
 from django.urls import reverse
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
@@ -13,6 +12,7 @@ from apis.orders.models import Order
 from apis.services.email_service import EmailService
 from apis.orders.mappings import order_tracking_template_mapping, order_subject_mapping
 from apis.transactions.choices import TransactionStatus
+from apis.users.models import DeliveryAgent
 
 User = get_user_model()
 
@@ -89,18 +89,12 @@ def order_placement_tracking(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Order)
 def order_placement_tracking(sender, instance, **kwargs):
-    user_uuid = instance.order.customer.uuid
-    order_notification_service = OrderAssignmentNotificationService(user_uuid, instance.order)
-    order_notification_service.send_order_assignment_notification()
-
-    print('Hello')
-    # Sleep for 5 minutes to get all delivery agent locations
-    time.sleep(300) # Number of seconds
-    print('Bye')
-
-    #find the closest agent
-    closest_agent = find_closest_agent()
-    OrderDelivery.objects.create(order=instance, delivery_agent=closest_agent)
-
-    #assign order to closest agent
+    user_uuid = instance.customer.uuid
+    DeliveryAgent.objects.update(marked_location=False)
+    order_notification_service = OrderAssignmentNotificationService(user_uuid, instance)
+    order_notification_service.broadcast_all_agents_about_order()
     
+    from multiprocessing import Process
+    from apis.orders.task import ThreadService
+    thread = ThreadService(instance)
+    thread.start()

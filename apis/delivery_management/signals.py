@@ -6,10 +6,13 @@ from apis.notifications.services.send_notification_service import OrderAssignmen
 import time
 
 from apis.users.models import DeliveryAgent
+import logging
+logger = logging.getLogger('daphne')
+
 
 def find_closest_agent(customer):
     from apis.users.models import DeliveryAgent
-    delivery_agents = DeliveryAgent.objects.all()
+    delivery_agents = DeliveryAgent.objects.filter(marked_location=True)
     import math
     import geopy.distance
     closest_distance = math.inf
@@ -19,7 +22,7 @@ def find_closest_agent(customer):
     customer_cors = (customer_lat, customer_long)
     for agent in delivery_agents:
         # find the closest one
-        driver_cors = (agent.latitude, agent.longitutde)
+        driver_cors = (agent.latitude, agent.longitude)
         agent_distance = geopy.distance.geodesic(driver_cors, customer_cors)
         if agent_distance < closest_distance:
             closest_distance = agent_distance
@@ -32,6 +35,8 @@ def find_closest_agent(customer):
 
 @receiver(post_save, sender=OrderDelivery)
 def order_assignment_to_agent(sender, instance, **kwargs):
-    user_uuid = instance.delivery_agent
+    user_uuid = instance.delivery_agent.uuid
+    logger.error(instance.delivery_agent)
+    logger.error(user_uuid)
     order_notification_service = OrderAssignmentNotificationService(user_uuid, instance.order)
     order_notification_service.send_order_assignment_notification()

@@ -6,6 +6,8 @@ from apis.notifications.notification_codes import RECORD_LOCATION
 
 from apis.orders.serializers import OrderSerializer
 from apis.users.utils.choices import ROLES
+import logging
+logger = logging.getLogger('daphne')
 
 User = get_user_model()
 
@@ -22,14 +24,15 @@ class OrderAssignmentNotificationService:
         return f'notification_rider_{self.user_uuid}'
 
     def get_data_for_notification(self):
-        order_serializer = OrderSerializer(self.order)
+        # order_serializer = OrderSerializer(self.order)
         data = {
             'message': 'Your got an order',
-            'order_info': order_serializer.data
+            'order_info': {}
         }
         return data
 
     def send_order_assignment_notification(self):
+        logger.error(self.get_room_group_name())
         async_to_sync(self.channel_layer.group_send)(
             self.get_room_group_name(),
             {
@@ -52,7 +55,8 @@ class OrderAssignmentNotificationService:
         )
 
     def broadcast_all_agents_about_order(self):
-        delivery_agent_uuids = User.objects.filter(role=ROLES.delivery_agent).values_list('uuid', flat=True)
+        delivery_agent_uuids = User.objects.filter(role=ROLES[0][0]).values_list('uuid', flat=True)
         for agent_uuid in delivery_agent_uuids:
+            logger.error(agent_uuid)
             group_name = f'notification_rider_{agent_uuid}'
             self.send_notification(group_name)
