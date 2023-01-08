@@ -7,7 +7,7 @@ from django.contrib.auth.models import UnicodeUsernameValidator
 
 from phonenumber_field.modelfields import PhoneNumberField
 
-from apis.base_models import BaseModel
+from apis.base_models import BaseModel, UserLocation
 from apis.users.managers import UserManager
 from apis.users.utils.choices import ROLES
 
@@ -62,7 +62,7 @@ class UserDevice(BaseModel):
     device_id = models.CharField(max_length=200)
 
 
-class CustomerAddress(BaseModel):
+class CustomerAddress(BaseModel, UserLocation):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_addresses')
     house_no = models.CharField(max_length=50, null=True, blank=True)
     apartment_no = models.CharField(max_length=50, null=True, blank=True)
@@ -84,9 +84,7 @@ class CustomerAddress(BaseModel):
         return f"{self.city} {self.state}"
 
 
-class DeliveryAgent(BaseModel):
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+class DeliveryAgent(BaseModel, UserLocation):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='delivery_agent')
     marked_location = models.BooleanField(default=False)
     status = models.BooleanField(default=False)
