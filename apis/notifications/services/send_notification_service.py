@@ -24,15 +24,17 @@ class OrderAssignmentNotificationService:
         return f'notification_rider_{self.user_uuid}'
 
     def get_data_for_notification(self):
-        # order_serializer = OrderSerializer(self.order)
         data = {
             'message': 'Your got an order',
-            'order_info': {}
+            'order_info': {
+                'customer_name': self.order.customer.full_name,
+                'drop_location': str(self.order.customer.selected_address),
+                'total_price': self.order.total_price
+            }
         }
         return data
 
     def send_order_assignment_notification(self):
-        logger.error(self.get_room_group_name())
         async_to_sync(self.channel_layer.group_send)(
             self.get_room_group_name(),
             {

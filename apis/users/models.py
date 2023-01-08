@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.utils.functional import cached_property
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import validate_email
@@ -44,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     def __str__(self):
         return self.email
 
-    @property
+    @cached_property
     def selected_address(self):
         customer_selected_address = self.user_addresses.filter(selected=True).first()
         if not customer_selected_address:
