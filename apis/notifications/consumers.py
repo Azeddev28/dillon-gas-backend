@@ -1,7 +1,9 @@
 import json
+import logging
 
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
+logger = logging.getLogger('daphne')
 
 
 class NotificationConsumer(WebsocketConsumer):
@@ -30,9 +32,7 @@ class NotificationConsumer(WebsocketConsumer):
     def send_notification(self, event):
         data = event.get('data')
 
-        self.send(text_data=json.dumps({
-            'data': data
-        }))
+        self.send(text_data=json.dumps(data))
 
     def broadcast_all_agents(self, event):
         data = event.get('data')
@@ -43,8 +43,11 @@ class NotificationConsumer(WebsocketConsumer):
         import json
 
         text_data = json.loads(text_data)
+        logger.error(self.scope.get('user'))
+        logger.error(self.scope.get('user').uuid)
         delivery_agent = self.scope.get('user').delivery_agent
-        delivery_agent.latitude = text_data.get('lat')
-        delivery_agent.longitude = text_data.get('long')
+        delivery_agent.latitude = text_data.get('latitude')
+        delivery_agent.longitude = text_data.get('longitude')
         delivery_agent.marked_location = True
+        logger.error(delivery_agent.marked_location, "HER")
         delivery_agent.save()

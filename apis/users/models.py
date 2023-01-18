@@ -52,6 +52,14 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
             return
 
         return customer_selected_address
+    
+    @cached_property
+    def consumer_coordinates(self):
+        selected_address = self.selected_address
+        return {
+            'latitude': selected_address.latitude,
+            'longitude': selected_address.longitude
+        }
 
     @property
     def full_name(self):
@@ -89,3 +97,6 @@ class DeliveryAgent(BaseModel, UserLocation):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='delivery_agent')
     marked_location = models.BooleanField(default=False)
     status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.email

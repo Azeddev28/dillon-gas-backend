@@ -15,21 +15,27 @@ class OrderAssignmentNotificationService:
     NOTIFICATION_TYPE = 'send_notification'
     BROADCAST_NOTIFICATION_TYPE = 'broadcast_all_agents'
 
-    def __init__(self, user_uuid, order):
+    def __init__(self, user_uuid, order, order_items=None):
         self.channel_layer = get_channel_layer()
         self.user_uuid = user_uuid
         self.order = order
+        if order_items:
+            self.order_items = order_items
 
     def get_room_group_name(self):
         return f'notification_rider_{self.user_uuid}'
 
     def get_data_for_notification(self):
+        import json
         data = {
+            'code': 'RECEIVED_ORDER',
             'message': 'Your got an order',
             'order_info': {
                 'customer_name': self.order.customer.full_name,
                 'drop_location': str(self.order.customer.selected_address),
-                'total_price': self.order.total_price
+                'total_price': self.order.total_price,
+                'consumer_coordinates': json.dumps(self.order.customer.consumer_coordinates),
+                'order_items': json.dumps(self.order_items)
             }
         }
         return data

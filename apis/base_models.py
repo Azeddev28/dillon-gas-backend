@@ -17,8 +17,8 @@ class BaseModel(TimeStamp):
 
 
 class UserLocation(models.Model):
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
 
     class Meta:
         abstract = True
