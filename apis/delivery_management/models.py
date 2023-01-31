@@ -37,3 +37,4 @@ class OrderDelivery(BaseModel):
 
     class Meta:
         verbose_name_plural = 'Order Deliveries'
+        unique_together = ('delivery_agent', 'order')

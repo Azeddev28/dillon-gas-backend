@@ -36,17 +36,18 @@ def find_closest_agent(customer):
 
 
 @receiver(post_save, sender=OrderDelivery)
-def order_assignment_to_agent(sender, instance, **kwargs):
-    user_uuid = instance.delivery_agent.uuid
-    order_items = instance.order.order_items.all()
-    order_items = [
-        {
-            'item_name': order_item.item.item.name,
-            'price': order_item.item.price,
-            'quantity': order_item.quantity,
-            'image_url': order_item.item.item.image.url,
-        }
-        for order_item in order_items
-    ]
-    order_notification_service = OrderAssignmentNotificationService(user_uuid, instance.order, order_items)
-    order_notification_service.send_order_assignment_notification()
+def order_assignment_to_agent(sender, instance, created, **kwargs):
+    if created:
+        user_uuid = instance.delivery_agent.uuid
+        order_items = instance.order.order_items.all()
+        order_items = [
+            {
+                'item_name': order_item.item.item.name,
+                'price': order_item.item.price,
+                'quantity': order_item.quantity,
+                'image_url': order_item.item.item.image.url,
+            }
+            for order_item in order_items
+        ]
+        order_notification_service = OrderAssignmentNotificationService(user_uuid, instance.order, order_items)
+        order_notification_service.send_order_assignment_notification()

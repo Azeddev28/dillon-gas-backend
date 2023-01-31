@@ -88,13 +88,14 @@ def order_placement_tracking(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Order)
-def order_placement_tracking(sender, instance, **kwargs):
-    user_uuid = instance.customer.uuid
-    DeliveryAgent.objects.update(marked_location=False)
-    order_notification_service = OrderAssignmentNotificationService(user_uuid, instance)
-    order_notification_service.broadcast_all_agents_about_order()
-    
-    from multiprocessing import Process
-    from apis.orders.task import ThreadService
-    thread = ThreadService(instance)
-    thread.start()
+def order_placement_tracking(sender, instance, created, **kwargs):
+    if created:
+        user_uuid = instance.customer.uuid
+        DeliveryAgent.objects.update(marked_location=False)
+        order_notification_service = OrderAssignmentNotificationService(user_uuid, instance)
+        order_notification_service.broadcast_all_agents_about_order()
+        
+        from multiprocessing import Process
+        from apis.orders.task import ThreadService
+        thread = ThreadService(instance)
+        thread.start()
