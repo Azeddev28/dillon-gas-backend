@@ -6,7 +6,7 @@ from asgiref.sync import async_to_sync
 logger = logging.getLogger('daphne')
 
 
-class NotificationConsumer(WebsocketConsumer):
+class CustomerNotificationConsumer(WebsocketConsumer):
     def connect(self):
         if self.scope.get('user').is_anonymous:
             self.close()
@@ -15,7 +15,7 @@ class NotificationConsumer(WebsocketConsumer):
         user_uuid = self.scope.get('user').uuid
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'notification_{self.room_name}_{user_uuid}'
-
+        logger.info(self.room_group_name)
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
             self.channel_name
@@ -34,20 +34,5 @@ class NotificationConsumer(WebsocketConsumer):
 
         self.send(text_data=json.dumps(data))
 
-    def broadcast_all_agents(self, event):
-        data = event.get('data')
-
-        self.send(text_data=json.dumps(data))
-
     def receive(self, text_data):
-        import json
-
-        text_data = json.loads(text_data)
-        logger.error(self.scope.get('user'))
-        logger.error(self.scope.get('user').uuid)
-        delivery_agent = self.scope.get('user').delivery_agent
-        delivery_agent.latitude = text_data.get('latitude')
-        delivery_agent.longitude = text_data.get('longitude')
-        delivery_agent.marked_location = True
-        logger.error(delivery_agent.marked_location, "HER")
-        delivery_agent.save()
+        pass

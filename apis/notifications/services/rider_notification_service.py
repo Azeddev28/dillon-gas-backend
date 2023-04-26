@@ -4,7 +4,6 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from apis.notifications.notification_codes import RECORD_LOCATION
 
-from apis.orders.serializers import OrderSerializer
 from apis.users.utils.choices import ROLES
 import logging
 logger = logging.getLogger('daphne')
@@ -27,10 +26,13 @@ class OrderAssignmentNotificationService:
 
     def get_data_for_notification(self):
         import json
+        logger.error(self.order.uuid)
+        logger.error(self.order.customer.consumer_coordinates)
         data = {
             'code': 'RECEIVED_ORDER',
             'message': 'Your got an order',
             'order_info': {
+                'order_uuid': str(self.order.uuid),
                 'customer_name': self.order.customer.full_name,
                 'drop_location': str(self.order.customer.selected_address),
                 'total_price': self.order.total_price,
@@ -63,8 +65,14 @@ class OrderAssignmentNotificationService:
         )
 
     def broadcast_all_agents_about_order(self):
-        delivery_agent_uuids = User.objects.filter(role=ROLES[0][0]).values_list('uuid', flat=True)
+        order_city = self.order.customer.selected_address.city
+        print(order_city)
+        delivery_agent_uuids = User.objects.filter(
+            role=ROLES[0][0], delivery_agent__assigned_city__name=order_city
+        ).values_list('uuid', flat=True)
+        print(delivery_agent_uuids)
         for agent_uuid in delivery_agent_uuids:
+            print(agent_uuid)
             logger.error(agent_uuid)
             group_name = f'notification_rider_{agent_uuid}'
             self.send_notification(group_name)

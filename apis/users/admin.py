@@ -40,7 +40,7 @@ class CustomerAddressAdmin(admin.ModelAdmin):
 
 
 class UserDeviceAdmin(admin.ModelAdmin):
-    list_display = ['user', 'device_id']
+    list_display = ['user', 'device_id', 'fcm_token']
     class Meta:
         model = UserDevice
 
@@ -48,3 +48,4 @@ class UserDeviceAdmin(admin.ModelAdmin):
 admin.site.register(User, UserAdmin)
 admin.site.register(CustomerAddress, CustomerAddressAdmin)
 admin.site.register(DeliveryAgent)
+admin.site.register(UserDevice, UserDeviceAdmin)

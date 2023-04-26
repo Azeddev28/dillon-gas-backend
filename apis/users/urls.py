@@ -6,7 +6,9 @@ from apis.users.bindings import (auth_token_view, logout_view,
                                  email_verification_view, register_view,
                                  resend_email_view, reset_password_view,
                                  customer_details_view, customer_address_viewset,
-                                 current_customer_address, user_account_deletion)
+                                 current_customer_address, user_account_deletion,
+                                 user_fcm_token_registration
+                                 )
 
 
 user_router = routers.SimpleRouter()
@@ -26,5 +28,6 @@ urlpatterns = [
 
     path('user-details/', customer_details_view, name='user-details'),
     path('current-customer-address/', current_customer_address, name='current-address'),
+    path('fcm-registration/', user_fcm_token_registration, name='fcm-registration')
 ]
 urlpatterns =  urlpatterns + user_router.urls

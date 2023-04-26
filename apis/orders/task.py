@@ -16,5 +16,7 @@ class ThreadService(threading.Thread):
 
         #find the closest agent
         closest_agent = find_closest_agent(self.order.customer)
+        logger.error("COME HERE")
         logger.error(closest_agent)
-        OrderDelivery.objects.create(order=self.order, delivery_agent=closest_agent.user)
+        if closest_agent:
+            OrderDelivery.objects.create(order=self.order, delivery_agent=closest_agent.user)

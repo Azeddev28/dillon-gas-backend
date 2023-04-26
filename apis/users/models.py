@@ -7,10 +7,13 @@ from django.core.validators import validate_email
 from django.contrib.auth.models import UnicodeUsernameValidator
 
 from phonenumber_field.modelfields import PhoneNumberField
+from cities_light.models import City
 
 from apis.base_models import BaseModel, UserLocation
 from apis.users.managers import UserManager
 from apis.users.utils.choices import ROLES
+import logging
+logger = logging.getLogger('daphne')
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
@@ -52,10 +55,11 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
             return
 
         return customer_selected_address
-    
-    @cached_property
+
+    @property
     def consumer_coordinates(self):
         selected_address = self.selected_address
+        logger.error(selected_address.latitude)
         return {
             'latitude': selected_address.latitude,
             'longitude': selected_address.longitude
@@ -69,6 +73,13 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 class UserDevice(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='device')
     device_id = models.CharField(max_length=200)
+    fcm_token = models.CharField(
+        help_text="This token is used to send firebase notifications to a particular device.",
+        default=None,
+        null=True,
+        blank=True,
+        max_length=200
+    )
 
 
 class CustomerAddress(BaseModel, UserLocation):
@@ -97,6 +108,7 @@ class DeliveryAgent(BaseModel, UserLocation):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='delivery_agent')
     marked_location = models.BooleanField(default=False)
     status = models.BooleanField(default=False)
+    assigned_city = models.ForeignKey(City, on_delete=models.DO_NOTHING, related_name='agent_city')
 
     def __str__(self):
         return self.user.email

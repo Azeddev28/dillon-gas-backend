@@ -3,7 +3,9 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 
 from apis.delivery_management.models import OrderDelivery
-from apis.notifications.services.send_notification_service import OrderAssignmentNotificationService
+from apis.notifications.services.customer_notification_service import CustomerNotificationService
+from apis.notifications.services.rider_notification_service import OrderAssignmentNotificationService
+from firebase_notification import FirebasePushNotifications
 
 logger = logging.getLogger('daphne')
 
@@ -51,3 +53,15 @@ def order_assignment_to_agent(sender, instance, created, **kwargs):
         ]
         order_notification_service = OrderAssignmentNotificationService(user_uuid, instance.order, order_items)
         order_notification_service.send_order_assignment_notification()
+        push_notification = FirebasePushNotifications()
+        push_notification.send_device_notification(instance.delivery_agent)
+
+
+        # Also notify consumer.
+        logger.info("CONSUMER KI BARI")
+        customer_notification_service = CustomerNotificationService(
+            customer=instance.order.customer,
+            delivery_agent=instance.delivery_agent,
+            order=instance.order
+        )
+        customer_notification_service.send_notification()
