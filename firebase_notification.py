@@ -9,12 +9,12 @@ class FirebasePushNotifications:
     def __init__(self):
         pass
     
-    def send_device_notification(self, user):
+    def send_device_notification(self, user, title, notification_body):
         fcm_token = user.device.fcm_token
         message = messaging.Message(
             notification=messaging.Notification(
-                title='New message',
-                body='You have a new message from John'
+                title=title,
+                body=notification_body
             ),
             token=fcm_token
         )

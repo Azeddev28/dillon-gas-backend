@@ -54,7 +54,11 @@ def order_assignment_to_agent(sender, instance, created, **kwargs):
         order_notification_service = OrderAssignmentNotificationService(user_uuid, instance.order, order_items)
         order_notification_service.send_order_assignment_notification()
         push_notification = FirebasePushNotifications()
-        push_notification.send_device_notification(instance.delivery_agent)
+        push_notification.send_device_notification(
+            user=instance.delivery_agent,
+            title='Order Assigned',
+            notification_body='You have a new order to deliver'
+        )
 
 
         # Also notify consumer.
