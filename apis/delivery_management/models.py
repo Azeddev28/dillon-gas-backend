@@ -34,6 +34,8 @@ class OrderDelivery(BaseModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_delivery')
     pickup_datetime = models.DateTimeField(null=True, blank=True)
     delivery_datetime = models.DateTimeField(null=True, blank=True)
+    order_active = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = 'Order Deliveries'
+        unique_together = ('delivery_agent', 'order')

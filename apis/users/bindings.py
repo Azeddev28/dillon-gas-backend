@@ -3,6 +3,7 @@ from apis.users.views.account_deletion import UserDeletionAPIView
 
 from apis.users.views.authentication import LogoutView
 from apis.users.views.customer_address import CustomerAddressModelViewset, CustomerSelectedAddressRetrieveAPIView
+from apis.users.views.device_management import UserFCMTokenRegistrationAPIView
 from apis.users.views.password import ResetPasswordAPIView
 from apis.users.views.registraion import RegisterUserAPIView
 from apis.users.views.user_details import CustomerDetailsRetrieveAPIView
@@ -20,3 +21,4 @@ customer_details_view = CustomerDetailsRetrieveAPIView.as_view()
 customer_address_viewset = CustomerAddressModelViewset
 current_customer_address = CustomerSelectedAddressRetrieveAPIView.as_view()
 user_account_deletion = UserDeletionAPIView.as_view()
+user_fcm_token_registration = UserFCMTokenRegistrationAPIView.as_view()

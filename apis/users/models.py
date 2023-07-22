@@ -1,15 +1,19 @@
 import uuid
 from django.db import models
+from django.utils.functional import cached_property
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import validate_email
 from django.contrib.auth.models import UnicodeUsernameValidator
 
 from phonenumber_field.modelfields import PhoneNumberField
+from cities_light.models import City
 
-from apis.base_models import BaseModel
+from apis.base_models import BaseModel, UserLocation
 from apis.users.managers import UserManager
 from apis.users.utils.choices import ROLES
+import logging
+logger = logging.getLogger('daphne')
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
@@ -44,13 +48,22 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     def __str__(self):
         return self.email
 
-    @property
+    @cached_property
     def selected_address(self):
         customer_selected_address = self.user_addresses.filter(selected=True).first()
         if not customer_selected_address:
             return
 
         return customer_selected_address
+
+    @property
+    def consumer_coordinates(self):
+        selected_address = self.selected_address
+        logger.error(selected_address.latitude)
+        return {
+            'latitude': selected_address.latitude,
+            'longitude': selected_address.longitude
+        }
 
     @property
     def full_name(self):
@@ -60,9 +73,16 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 class UserDevice(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='device')
     device_id = models.CharField(max_length=200)
+    fcm_token = models.CharField(
+        help_text="This token is used to send firebase notifications to a particular device.",
+        default=None,
+        null=True,
+        blank=True,
+        max_length=200
+    )
 
 
-class CustomerAddress(BaseModel):
+class CustomerAddress(BaseModel, UserLocation):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_addresses')
     house_no = models.CharField(max_length=50, null=True, blank=True)
     apartment_no = models.CharField(max_length=50, null=True, blank=True)
@@ -82,3 +102,13 @@ class CustomerAddress(BaseModel):
             return f"{self.apartment_no} {self.street_address} {self.city} {self.state}"
 
         return f"{self.city} {self.state}"
+
+
+class DeliveryAgent(BaseModel, UserLocation):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='delivery_agent')
+    marked_location = models.BooleanField(default=False)
+    status = models.BooleanField(default=False)
+    assigned_city = models.ForeignKey(City, on_delete=models.DO_NOTHING, related_name='agent_city')
+
+    def __str__(self):
+        return self.user.email

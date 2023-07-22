@@ -1,4 +1,8 @@
-from apis.notifications.consumers import NotificationConsumer
+from apis.notifications.consumers.rider_consumers import RiderNotificationConsumer
+from apis.notifications.consumers.customer_consumers import CustomerNotificationConsumer
 
 
-notification_consumer_websocket = NotificationConsumer.as_asgi()
+
+rider_notification_consumer_websocket = RiderNotificationConsumer.as_asgi()
+customer_notification_consumer_websocket = CustomerNotificationConsumer.as_asgi()
+

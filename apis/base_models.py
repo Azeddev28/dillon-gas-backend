@@ -14,3 +14,11 @@ class BaseModel(TimeStamp):
 
     class Meta:
         abstract = True
+
+
+class UserLocation(models.Model):
+    longitude = models.FloatField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        abstract = True

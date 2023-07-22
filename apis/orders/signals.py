@@ -1,14 +1,21 @@
+import logging
 from django.urls import reverse
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
+from apis.delivery_management.models import OrderDelivery
+from apis.delivery_management.signals import find_closest_agent
+from apis.notifications.services.rider_notification_service import OrderAssignmentNotificationService
 
 from apis.orders.choices import OrderStatus, PaymentStatus
 from apis.orders.models import Order
 from apis.services.email_service import EmailService
 from apis.orders.mappings import order_tracking_template_mapping, order_subject_mapping
 from apis.transactions.choices import TransactionStatus
+from apis.users.models import DeliveryAgent
+from apis.notifications.services.customer_notification_service import CustomerNotificationService
+logger = logging.getLogger('daphne')
 
 User = get_user_model()
 
@@ -81,3 +88,26 @@ def order_placement_tracking(sender, instance, **kwargs):
         email_service.start()
     except Exception as e:
         pass
+
+
+@receiver(post_save, sender=Order)
+def order_assignment(sender, instance, created, **kwargs):
+    logger.info(created)
+    if created:
+        user_uuid = instance.customer.uuid
+        DeliveryAgent.objects.update(marked_location=False)
+        order_notification_service = OrderAssignmentNotificationService(user_uuid, instance)
+        order_notification_service.broadcast_all_agents_about_order()
+
+        from apis.orders.task import ThreadService
+        thread = ThreadService(instance)
+        thread.start()
+    else:
+        if instance.order_status == OrderStatus.COMPLETED:
+            # update consumer that an order is delivered.
+            logger.info("Consumer ko agaya")
+            customer_notification_service = CustomerNotificationService(
+                customer=instance.customer,
+                order=instance
+            )
+            customer_notification_service.send_notification()

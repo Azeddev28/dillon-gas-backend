@@ -36,11 +36,11 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 AWS_LOCATION = env('AWS_LOCATION')
 
-STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATICFILES_STORAGE = 'config.storages.StaticStorage'
+# STATICFILES_STORAGE = 'config.storages.StaticStorage'
 DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
