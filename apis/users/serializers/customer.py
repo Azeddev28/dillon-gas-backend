@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
+import logging
 from apis.users.models import CustomerAddress
 
 User = get_user_model()
@@ -26,6 +27,12 @@ class CustomerAddressSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = validated_data.get('user')
+        logger = logging.getLogger('daphne')
+        import json
+        logger.info("AJAO"*10)
+        new_dict = {**validated_data}
+        new_dict.pop('user', None)
+        logger.info(json.dumps(new_dict))
         CustomerAddress.objects.filter(user=user).update(selected=False)
         return super().create(validated_data)
 

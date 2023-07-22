@@ -19,4 +19,5 @@ class ThreadService(threading.Thread):
         logger.error("COME HERE")
         logger.error(closest_agent)
         if closest_agent:
-            OrderDelivery.objects.create(order=self.order, delivery_agent=closest_agent.user)
+            # Just making the order active as soon as its created.
+            OrderDelivery.objects.create(order=self.order, delivery_agent=closest_agent.user, order_active=True)

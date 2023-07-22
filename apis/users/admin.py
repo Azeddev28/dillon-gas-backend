@@ -34,7 +34,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 class CustomerAddressAdmin(admin.ModelAdmin):
-    list_display = ['user', 'street_address', 'city', 'state', 'selected']
+    list_display = ['user', 'street_address', 'city', 'state', 'selected', 'created_at']
     class Meta:
         model = CustomerAddress
 

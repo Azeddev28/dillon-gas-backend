@@ -31,6 +31,14 @@ class TransactionBriefInfoSerializer(serializers.ModelSerializer):
         fields = ['reference',]
 
 
+class DeliveryAgentOrderUpdateSerializer(serializers.ModelSerializer):
+    order_status = OrderStatusField(source='*', required=False)
+
+    class Meta:
+        model = Order
+        exclude = ['id', 'is_active', 'station']
+
+
 class OrderSerializer(serializers.ModelSerializer):
     customer = serializers.SlugRelatedField(
         default=serializers.CurrentUserDefault(), 
