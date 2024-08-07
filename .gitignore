@@ -1,4 +1,14 @@
 env
-__pycache__
-.env
+*__pycache__*
 db.sqlite3
+static
+.DS_STORE
+venv
+dillon_gas.log
+dillon_gas_error.log
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
+config.bat
+node_modules
