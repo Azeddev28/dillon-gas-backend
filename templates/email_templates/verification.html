@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <div>
+      <div style="padding-top: 2rem;
+      padding-bottom: 2rem; 
+      padding-left: 2rem;
+      padding-right: 2rem; 
+      background: #F8F8FC;">
+      {% include 'email_templates/email_header.html' %}
+
+        <div style="margin-bottom: 1rem;">
+          <p style="font-size: 0.875rem;
+          line-height: 1.25rem; 
+          font-weight: 400; 
+          color: #384860;
+          ">
+            To reset your password, please use the 6 digits verification below.
+          </p>
+        </div>
+        <div style="font-size: 2.25rem;
+        line-height: 2.5rem; 
+        text-align: center; 
+        background: #FFE5E5;
+        ">
+          <div style="margin-bottom: 1rem;">
+            <p style="font-weight: 600;">{{verification_code}}</p>
+          </div>
+        </div>
+      </div>
+    {% include 'email_templates/email_footer.html' %}
+    </div>
+  </body>
+  </html>
