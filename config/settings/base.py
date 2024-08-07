@@ -11,16 +11,29 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
+from datetime import timedelta
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# reading .env file
+env = environ.Env()
+ENV_PATH = BASE_DIR.__str__() + '/.env'
+environ.Env.read_env(ENV_PATH)
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z%@ciss)e*^n6sg2s=p_kb8ol+8m8lmmro(n1no%drov+26@-3'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
+
+# TODO: use check_request_enabled signal when integrating third party API's
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -31,13 +44,35 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'cities_light',
 ]
 
-PROJECT_APPS = []
+PROJECT_APPS = [
+    'apis.users',
+    'apis.transactions',
+    'apis.payments',
+    'apis.stations',
+    'apis.inventory',
+    'apis.promotions',
+    'apis.orders',
+    'apis.ratings',
+    'apis.wallets',
+    'apis.delivery_management'
+]
 
-INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
+THIRD_PARTY_APPS = [
+    'rest_framework',
+    'corsheaders',
+    'phonenumber_field',
+    'storages',
+    'channels',
+]
+
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -45,14 +80,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
+
 ROOT_URLCONF = 'config.urls'
+
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,18 +105,33 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
+CHANNEL_LAYERS = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
     }
 }
 
+# Caching configuration
+REDIS_CACHE_LOCATION = env('REDIS_CACHE_LOCATION')
+CACHE_DEFAULT_TIMEOUT = 24 * 60 * 60  # 24 hours
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://localhost:6379",
+        "TIMEOUT": CACHE_DEFAULT_TIMEOUT,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+AUTH_USER_MODEL = 'users.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -97,6 +151,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# REST FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ]
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -117,7 +177,44 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Extra lookup directories for collectstatic to find static files
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, ''),
+)
+
+# SITE DOMAIN SETTINGS
+SITE_ID = 1
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+# EMAIL SETUP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_USE_TLS = True
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+# FLUTTERWAVE SETUP
+FLUTTERWAVE_BASE_URL = env("FLUTTERWAVE_BASE_URL")
+FLUTTERWAVE_SECRET_KEY = env("FLUTTERWAVE_SECRET_KEY")
+FLUTTERWAVE_ADMIN_EMAIL = env("FLUTTERWAVE_ADMIN_EMAIL")
+BVN_ACCOUNT_NUMBER = env("BVN_ACCOUNT_NUMBER")
+FLUTTERWAVE_ADMIN_PHONE_NUMBER = env("FLUTTERWAVE_ADMIN_PHONE_NUMBER")
+FLUTTERWAVE_ADMIN_FIRST_NAME = env("FLUTTERWAVE_ADMIN_FIRST_NAME")
+FLUTTERWAVE_ADMIN_LAST_NAME = env("FLUTTERWAVE_ADMIN_LAST_NAME")
+FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATION = env("FLUTTERWAVE_VIRTUAL_ACCOUNT_NARRATION")
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=355)
+}
+
+# DJANGO CITIES
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['NG']
